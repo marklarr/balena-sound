@@ -31,19 +31,8 @@ services:
       - 1705:1705
       - 1780:1780
 
-  multiroom-client:
-    build: ./core/multiroom/client
-    restart: on-failure
 
   # Plugins
-  bluetooth:
-    build: ./plugins/bluetooth
-    restart: on-failure
-    network_mode: host
-    cap_add:
-      - NET_ADMIN
-    labels:
-      io.balena.features.dbus: 1
 
   airplay:
     build: ./plugins/airplay
