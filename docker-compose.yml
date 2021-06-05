@@ -50,6 +50,12 @@ services:
     volumes:
       - 'settings:/data' # Only required if using PERSISTENT flag (see below)
 
+  remodora:
+    build: ./plugins/remodora
+    restart: on-failure
+    privileged: true
+    network_mode: host
+
   spotify:
     build: ./plugins/spotify
     restart: on-failure
