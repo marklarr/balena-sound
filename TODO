@@ -1,4 +1,9 @@
-* Install snapweb: https://github.com/badaix/snapweb
 * Run a "smashing" dashboard: https://smashing.github.io/
   * Weather widget
   * Snapclient control widget
+* Duplicate the entire repo (instead of forking)
+  * Then, make it private
+  * And, update the browser submodule with your changes
+* Write instructions for deploying
+  * npm use 10.24.0
+  * balena push sound-leader
