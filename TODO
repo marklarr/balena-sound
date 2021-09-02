@@ -5,5 +5,5 @@
   * Then, make it private
   * And, update the browser submodule with your changes
 * Write instructions for deploying
-  * npm use 10.24.0
+  * nvm use 10.24.0
   * balena push sound-leader
