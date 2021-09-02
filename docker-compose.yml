@@ -7,6 +7,8 @@ volumes:
 services:
 
   # Core services
+  # -- Required for a fully featured installation of balenaSound
+  # -- Mutiroom services can be removed if not using multiroom mode
   audio:
     build: ./core/audio
     privileged: true
@@ -17,11 +19,12 @@ services:
       - 4317:4317
 
   sound-supervisor:
-    build: ./core/sound-supervisor
+    build: 
+      context: .
+      dockerfile: ./core/sound-supervisor/Dockerfile.template
     network_mode: host
-    ports:
-      - 3000:3000
     labels:
+      io.balena.features.balena-api: '1'
       io.balena.features.supervisor-api: 1
 
   multiroom-server:
@@ -33,8 +36,18 @@ services:
       - 1780:1780
 
 
-  # Plugins
+  logging:
+    image: balenablocks/log2screen
+    privileged: true
+    restart: always
+    network_mode: host
+    environment:
+      - 'DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket'
+    labels:
+      io.balena.features.dbus: 1
+      io.balena.features.supervisor-api: 1
 
+  # Plugins
   airplay:
     build: ./plugins/airplay
     restart: on-failure
@@ -57,10 +70,3 @@ services:
     network_mode: host
     volumes:
       - spotifycache:/var/cache/raspotify
-
-  upnp:
-    build: ./plugins/upnp
-    restart: on-failure
-    network_mode: host
-    ports:
-      - 49494:49494
