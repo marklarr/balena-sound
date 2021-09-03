@@ -1,4 +1,248 @@
 - commits:
+    - subject: 'meta: remove CODEOWNERS file'
+      hash: d6c052158bbeddacc2a13c005ac2ac7554ff3c7a
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Tomás Migone <tomas@balena.io>
+        signed-off-by: Tomás Migone <tomas@balena.io>
+      author: Tomás Migone
+      nested: []
+  version: 3.6.8
+  date: 2021-06-30T15:27:57.283Z
+- commits:
+    - subject: 'multiroom: use alsa backend on client'
+      hash: cce724d9afa54ad18fb8307f541ad7f5d4086e35
+      body: |
+        Pulse backend is not working reliably, use alsa instead.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Tomás Migone <tomas@balena.io>
+        signed-off-by: Tomás Migone <tomas@balena.io>
+      author: Tomás Migone
+      nested: []
+  version: 3.6.7
+  date: 2021-06-24T18:41:11.531Z
+- commits:
+    - subject: 'hub: temporarily track usage'
+      hash: aabc7636f8d6ebc25cbb9f95acb0742580be17d7
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Tomás Migone <tomas@balena.io>
+        signed-off-by: Tomás Migone <tomas@balena.io>
+      author: Tomás Migone
+      nested: []
+  version: 3.6.6
+  date: 2021-06-23T14:06:31.807Z
+- commits:
+    - subject: 'multiroom: unpin client image'
+      hash: 7ac41a7264fa46d4ebe79c83ad52db3ad4ba8c25
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Tomás Migone <tomas@balena.io>
+        signed-off-by: Tomás Migone <tomas@balena.io>
+      author: Tomás Migone
+      nested: []
+  version: 3.6.5
+  date: 2021-06-22T14:18:51.880Z
+- commits:
+    - subject: Expose project version on sound API
+      hash: b4e16b1a965f1f01865af8a9b0544a7fd83a39d0
+      body: ''
+      footer:
+        Closes: '#460'
+        closes: '#460'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Tomás Migone <tomas@balena.io>
+        signed-off-by: Tomás Migone <tomas@balena.io>
+      author: Tomás Migone
+      nested: []
+  version: 3.6.4
+  date: 2021-06-21T16:11:10.419Z
+- commits:
+    - subject: 'multiroom: allow disabling multiroom master updates'
+      hash: 9d02cd37f1012ade59e5b083c249ceb5a8cebb9a
+      body: ''
+      footer:
+        Closes: '#288'
+        closes: '#288'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Tomás Migone <tomas@balena.io>
+        signed-off-by: Tomás Migone <tomas@balena.io>
+      author: Tomás Migone
+      nested: []
+    - subject: 'multiroom: add periodic fleet sync'
+      hash: c38d223a95d0842e60d8f723f70c26bf75f19923
+      body: ''
+      footer:
+        Closes: '#466, #274'
+        closes: '#466, #274'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Tomás Migone <tomas@balena.io>
+        signed-off-by: Tomás Migone <tomas@balena.io>
+      author: Tomás Migone
+      nested: []
+    - subject: 'multiroom: use multiroom blocks'
+      hash: 437442663f95e859e64fd351ce70d3e70cde78bb
+      body: |
+        This reduces image size from 350MB to 35MB!
+      footer:
+        Closes: '#414, #425'
+        closes: '#414, #425'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Tomás Migone <tomas@balena.io>
+        signed-off-by: Tomás Migone <tomas@balena.io>
+      author: Tomás Migone
+      nested: []
+  version: 3.6.3
+  date: 2021-06-18T13:37:31.242Z
+- commits:
+    - subject: Put definition of SOUND_SUPERVISOR_PORT on separate line in bash scripts
+      hash: c9ea97cf03f32c76b3a81940de054a64d632bb77
+      body: ''
+      footer:
+        Connects-to: '#461'
+        connects-to: '#461'
+        Change-type: patch
+        change-type: patch
+      author: Philip A
+      nested: []
+    - subject: Use SOUND_SUPERVISOR_PORT in container start scripts
+      hash: 3d267ca69f01dd11b19f621a08f96e71b88a1a17
+      body: >
+        This patch make container start scripts consider the environment
+        variable SOUND_SUPERVISOR_PORT.
+
+        Otherwise the services adress requests to wrong default port, if sound
+        supervisor web port is changed by above configuration variable.
+
+        This change affects audio, airplay, multi-room and docs.
+      footer:
+        Connects-to: '#461'
+        connects-to: '#461'
+        Change-type: patch
+        change-type: patch
+      author: Philip A
+      nested: []
+  version: 3.6.2
+  date: 2021-06-14T19:25:45.911Z
+- commits:
+    - subject: Remove unneeded ports from sound supervisor service
+      hash: bbf8110f60cbf6dae37f914e4ab9e3e14ac030ad
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Tomás Migone <tomas@balena.io>
+        signed-off-by: Tomás Migone <tomas@balena.io>
+      author: Tomás Migone
+      nested: []
+  version: 3.6.1
+  date: 2021-06-09T19:26:41.040Z
+- commits:
+    - subject: Add logging service
+      hash: b976df6558b0ff2fb0bf111e2e7f498e980778b6
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Tomás Migone <tomas@balena.io>
+        signed-off-by: Tomás Migone <tomas@balena.io>
+      author: Tomás Migone
+      nested: []
+    - subject: Use updated block naming
+      hash: ef474a864a2d9a2dd815c4500475196d30e0857b
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Tomás Migone <tomas@balena.io>
+        signed-off-by: Tomás Migone <tomas@balena.io>
+      author: Tomás Migone
+      nested: []
+    - subject: Multiple changes
+      hash: 39efd57f29156c8ecdadeb83bc0c14726249f3f0
+      body: |
+        - Use UUID instead of hostname for plugin broadcast names
+        - open fleet adjustments
+      footer:
+        Closes: '#449'
+        closes: '#449'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Tomás Migone <tomas@balena.io>
+        signed-off-by: Tomás Migone <tomas@balena.io>
+      author: Tomás Migone
+      nested: []
+    - subject: 'ui: Implement basic version of local UI for open fleets'
+      hash: a0d8c874f8efbc308d2098e834404a495fef0b44
+      body: ''
+      footer:
+        Closes: '#451'
+        closes: '#451'
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Tomás Migone <tomas@balena.io>
+        signed-off-by: Tomás Migone <tomas@balena.io>
+      author: Tomás Migone
+      nested: []
+  version: 3.6.0
+  date: 2021-05-27T20:53:25.501Z
+- commits:
+    - subject: 'plugins: revamp plugins'
+      hash: bee55fa4df039905987bccee57e2d306adf14216
+      body: |
+        - Install bluetooth, airplay and spotify by default
+        - Add installable plugins
+      footer:
+        Closes: '#412'
+        closes: '#412'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Tomás Migone <tomas@balena.io>
+        signed-off-by: Tomás Migone <tomas@balena.io>
+      author: Tomás Migone
+      nested: []
+    - subject: 'docs: Clarify SOUND_DISABLE_PLUGIN'
+      hash: 994586966b0a980db3c531ade3fe0de9ccb7fbd6
+      body: ''
+      footer:
+        Closes: '#445'
+        closes: '#445'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Tomás Migone <tomas@balena.io>
+        signed-off-by: Tomás Migone <tomas@balena.io>
+      author: Tomás Migone
+      nested: []
+  version: 3.5.5
+  date: 2021-05-25T13:07:23.690Z
+- commits:
+    - subject: 'docs: expand DAC docs'
+      hash: f9b8cb04fb4deac9fc84b5bb4eb201df1699f42b
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Tomás Migone <tomas@balena.io>
+        signed-off-by: Tomás Migone <tomas@balena.io>
+        Co-authored-by: Andrew Nhem <andrewnhem@users.noreply.github.com>
+        co-authored-by: Andrew Nhem <andrewnhem@users.noreply.github.com>
+      author: Tomás Migone
+      nested: []
+  version: 3.5.4
+  date: 2021-05-24T16:09:56.919Z
+- commits:
     - subject: 'hub: add open fleets metadata'
       hash: 3482c113754b2f6ea72c6b6c589dc7252a7adeca
       body: ''
