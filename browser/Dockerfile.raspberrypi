@@ -1,6 +1,6 @@
 ARG NODEJS_VERSION="12"
 
-FROM balenalib/raspberry-pi-node:${NODEJS_VERSION}-buster-run
+FROM balenalib/raspberry-pi-node:${NODEJS_VERSION}-run
 # install required packages
 RUN install_packages \
     git \
