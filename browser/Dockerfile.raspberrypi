@@ -6,6 +6,8 @@ RUN install_packages \
     gcc \
     make \
     libc6-dev \
+    chromium-browser \
+    rpi-chromium-mods \ 
     libgles2-mesa \
     lsb-release \
     mesa-vdpau-drivers \
@@ -54,15 +56,6 @@ RUN git clone https://github.com/eskdale/pi-touchscreen-dimmer.git /usr/src/pi-t
 WORKDIR /usr/src/pi-touchscreen-dimmer
 RUN make clean && make
 WORKDIR /usr/src/app
-
-RUN git clone https://github.com/proprietary/chromium-widevine.git
-WORKDIR chromium-widevine
-RUN ./use-from-google-chrome.sh
-WORKDIR /usr/src/app
-
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-RUN echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
-RUN sudo apt update && sudo apt install -y google-chrome-stable
 
 # Start app
 CMD ["bash", "/usr/src/app/start.sh"]
