@@ -1,6 +1,6 @@
 ARG NODEJS_VERSION="12"
 
-FROM balenalib/raspberrypi3:${NODEJS_VERSION}-run
+FROM balenalib/%%BALENA_MACHINE_NAME%%:${NODEJS_VERSION}-run
 # install required packages
 RUN install_packages \
     git \
