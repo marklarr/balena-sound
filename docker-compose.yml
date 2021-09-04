@@ -2,7 +2,8 @@ version: '2'
 
 volumes:
   spotifycache:
-  settings:
+  snapcastcache:
+  browsercache:
 
 services:
 
@@ -30,6 +31,8 @@ services:
   multiroom-server:
     build: ./core/multiroom/server
     restart: on-failure
+    volumes:
+      - 'snapcastcache:/var/cache/snapcast' # Persist client names
     ports:
       - 1704:1704
       - 1705:1705
@@ -61,7 +64,7 @@ services:
     privileged: true # required for UDEV to find plugged in peripherals such as a USB mouse
     network_mode: host
     volumes:
-      - 'settings:/data' # Only required if using PERSISTENT flag (see below)
+      - 'browsercache:/data' # Only required if using PERSISTENT flag (see below)
 
   spotify:
     build: ./plugins/spotify
