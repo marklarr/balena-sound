@@ -45,6 +45,10 @@ chown -R chromium:chromium /data
 mkdir -p /data/chromium
 rm -f /data/chromium/SingletonLock
 
+# Set the timezone (or Pandora authentication won't work)
+ln -fs "/usr/share/zoneinfo/America/Los_Angeles" /etc/localtime
+dpkg-reconfigure tzdata
+
 # we can't maintain the environment with su, because we are logging in to a new session
 # so we need to manually pass in the environment variables to maintain, in a whitelist
 # This gets the current environment, as a comma-separated string
