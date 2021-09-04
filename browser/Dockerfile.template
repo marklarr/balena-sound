@@ -8,6 +8,7 @@ RUN install_packages \
     make \
     libc6-dev \
     chromium \
+    libwidevinecdm0 \
     libgles2-mesa \
     lsb-release \
     mesa-vdpau-drivers \
