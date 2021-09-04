@@ -46,6 +46,9 @@ async function getUrlToDisplayAsync() {
       }
 
       return launchUrl;
+    } else {
+      // To support the chrome option of "open these tabs on startup"
+      return "";
     }
 
     console.log("LAUNCH_URL environment variable not set.")
