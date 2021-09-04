@@ -113,6 +113,7 @@ let launchChromium = async function(url) {
         '--noerrdialogs',
         '--disable-session-crashed-bubble',
         '--check-for-update-interval=31536000',
+        '--enable-widevine',
         '--disable-dev-shm-usage', // TODO: work out if we can enable this for devices with >1Gb of memory
       ];
 
