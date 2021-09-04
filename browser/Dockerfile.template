@@ -20,6 +20,8 @@ RUN install_packages \
     xserver-xorg xinit \
     xterm 
 
+RUN cp -R /opt/WidevineCdm /usr/lib/chromium/
+
 WORKDIR /usr/src/app
 
 # install node dependencies
