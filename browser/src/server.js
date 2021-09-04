@@ -171,7 +171,7 @@ let launchChromium = async function(url) {
 
 // Get's the chrome-launcher default flags, minus the extensions and audio muting flags.
 async function SetDefaultFlags() {
-  DEFAULT_FLAGS =  await chromeLauncher.Launcher.defaultFlags().filter(flag => '--disable-extensions' !== flag && '--mute-audio' !== flag);
+  // DEFAULT_FLAGS =  await chromeLauncher.Launcher.defaultFlags().filter(flag => '--disable-extensions' !== flag && '--mute-audio' !== flag);
 }
 
 async function setTimer(interval) {
