@@ -7,7 +7,6 @@ RUN install_packages \
     gcc \
     make \
     libc6-dev \
-    libwidevinecdm0 \
     chromium \
     libgles2-mesa \
     lsb-release \
