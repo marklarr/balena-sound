@@ -1,0 +1,12 @@
+1. three windows
+  a. Pandora/stations window (hide) 
+  b. UI window (show)
+    * Tabs
+      * Scroll View
+        * Pandora Stations
+        * Lo-Fi HipHop 
+      * Volume View
+  c. Audio player window (hide)
+2. ipc
+  1. When window A loads, send stations to window B
+  2. When window B has an action on scroll view, send audio to play to window C
