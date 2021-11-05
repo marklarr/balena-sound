@@ -4,6 +4,7 @@ volumes:
   spotifycache:
   snapcastcache:
   browsercache:
+  homeassistantconfig:
 
 services:
 
@@ -74,6 +75,15 @@ services:
     network_mode: host
     volumes:
       - 'browsercache:/data' # Only required if using PERSISTENT flag (see below)
+
+  home-automation:
+    build: ./plugins/home-automation
+    ports:
+      - 80:8123
+    privileged: true
+    volumes:
+      - 'homeassistantconfig:/config'
+    restart: always
 
   spotify:
     build: ./plugins/spotify

@@ -7,3 +7,10 @@
 * Write instructions for deploying
   * nvm use 10.24.0
   * balena push sound-leader
+
+  * Home automation
+    * Not deploying for some reason.. I should try deploying the latest working release to see if this is an issue with the new stuff or not
+
+  * Setup deconz in a separate balena block 
+    * Dockerfile: https://github.com/braintreeps/vim_dotfiles.git
+    * USB device: /dev/serial/by-id/usb-dresden_elektronik_ingenieurtechnik_GmbH_ConBee_II_DE2458729-if00
