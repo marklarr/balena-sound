@@ -79,7 +79,7 @@ services:
   home-automation:
     build: ./plugins/home-automation
     ports:
-      - 80:8123
+      - 8123:8123
     privileged: true
     volumes:
       - 'homeassistantconfig:/config'
