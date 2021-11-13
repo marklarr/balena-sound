@@ -4,7 +4,14 @@ volumes:
   spotifycache:
   snapcastcache:
   browsercache:
-  homeassistant:
+  homeassistant-automations:
+  homeassistant-groups:
+  homeassistant-zigbee:
+  homeassistant-configuration:
+  homeassistant-scenes:
+  homeassistant-scripts:
+  homeassistant-home-assistant_v2:
+  homeassistant-secrets:
 
 services:
 
@@ -82,7 +89,14 @@ services:
       - 8123:8123
     privileged: true
     volumes:
-      - 'homeassistant:/'
+      - 'homeassistant-automations:/automations.yaml'
+      - 'homeassistant-groups:/groups.yaml'
+      - 'homeassistant-zigbee:/zigbee.db'
+      - 'homeassistant-configuration:/configuration.yaml'
+      - 'homeassistant-scenes:/scenes.yaml'
+      - 'homeassistant-scripts:/scripts.yaml'
+      - 'homeassistant-home-assistant_v2:/home-assistant_v2.db'
+      - 'homeassistant-secrets:/secrets.yaml'
     restart: always
 
   spotify:
