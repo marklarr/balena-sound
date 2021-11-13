@@ -4,7 +4,7 @@ volumes:
   spotifycache:
   snapcastcache:
   browsercache:
-  homeassistantconfig:
+  homeassistant:
 
 services:
 
@@ -82,7 +82,7 @@ services:
       - 8123:8123
     privileged: true
     volumes:
-      - 'homeassistantconfig:/config'
+      - 'homeassistant:/'
     restart: always
 
   spotify:
