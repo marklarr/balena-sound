@@ -89,14 +89,14 @@ services:
       - 8123:8123
     privileged: true
     volumes:
-      - 'homeassistant-automations:/automations.yaml'
-      - 'homeassistant-groups:/groups.yaml'
-      - 'homeassistant-zigbee:/zigbee.db'
-      - 'homeassistant-configuration:/configuration.yaml'
-      - 'homeassistant-scenes:/scenes.yaml'
-      - 'homeassistant-scripts:/scripts.yaml'
-      - 'homeassistant-home-assistant_v2:/home-assistant_v2.db'
-      - 'homeassistant-secrets:/secrets.yaml'
+      - 'homeassistant-automations:/config/automations.yaml'
+      - 'homeassistant-groups:/config/groups.yaml'
+      - 'homeassistant-zigbee:/config/zigbee.db'
+      - 'homeassistant-configuration:/config/configuration.yaml'
+      - 'homeassistant-scenes:/config/scenes.yaml'
+      - 'homeassistant-scripts:/config/scripts.yaml'
+      - 'homeassistant-home-assistant_v2:/config/home-assistant_v2.db'
+      - 'homeassistant-secrets:/config/secrets.yaml'
     restart: always
 
   spotify:
