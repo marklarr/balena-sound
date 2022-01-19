@@ -167,6 +167,7 @@ let launchChromium = async function(url) {
       ignoreDefaultFlags: true,
       chromeFlags: flags,
       port: REMOTE_DEBUG_PORT,
+      logLevel: 'verbose',
     });
       
     console.log(`Chromium remote debugging tools running on port: ${chrome.port}`);
