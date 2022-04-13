@@ -54,5 +54,12 @@ ENV PULSE_SERVER=tcp:audio:4317
 
 COPY VERSION .
 
+
+RUN git clone https://github.com/eskdale/pi-touchscreen-dimmer.git /usr/src/pi-touchscreen-dimmer
+WORKDIR /usr/src/pi-touchscreen-dimmer
+RUN make clean && make
+WORKDIR /usr/src/app
+
+
 # Start app
 CMD ["bash", "/usr/src/app/start.sh"]

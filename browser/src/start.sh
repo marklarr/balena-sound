@@ -44,6 +44,13 @@ then
 	fi
 fi
 
+
+# Set screen to max brightness
+echo 255 >  /sys/class/backlight/rpi_backlight/brightness
+# Run screen dimming on idle
+/usr/src/pi-touchscreen-dimmer/timeout 60 15 event0 &
+
+
 # set up the user data area
 chown -R chromium:chromium /data
 mkdir -p /data/chromium
