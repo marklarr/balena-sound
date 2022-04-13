@@ -8,6 +8,10 @@ const {
   setIntervalAsync,
   clearIntervalAsync
 } = require('set-interval-async/dynamic')
+const { spawn } = require('child_process');
+const { readFile, unlink } = require('fs').promises;
+const path = require('path');
+const os = require('os');
 
 // Bring in the static environment variables
 const API_PORT = parseInt(process.env.API_PORT) || 5011;
@@ -46,9 +50,6 @@ async function getUrlToDisplayAsync() {
       }
 
       return launchUrl;
-    } else {
-      // To support the chrome option of "open these tabs on startup"
-      return "";
     }
 
     console.log("LAUNCH_URL environment variable not set.")
@@ -116,7 +117,6 @@ let launchChromium = async function(url) {
         '--noerrdialogs',
         '--disable-session-crashed-bubble',
         '--check-for-update-interval=31536000',
-        '--enable-widevine',
         '--disable-dev-shm-usage', // TODO: work out if we can enable this for devices with >1Gb of memory
       ];
 
@@ -143,11 +143,6 @@ let launchChromium = async function(url) {
       }
     }
 
-    if ('1' === PERSISTENT_DATA)
-    {
-      flags.push('--user-data-dir=/data/chromium');
-    }
-
     let startingUrl = url;
     if ('1' === kioskMode)
     {
@@ -167,7 +162,7 @@ let launchChromium = async function(url) {
       ignoreDefaultFlags: true,
       chromeFlags: flags,
       port: REMOTE_DEBUG_PORT,
-      logLevel: 'verbose',
+      userDataDir: '1' === PERSISTENT_DATA ? '/data/chromium' : undefined
     });
       
     console.log(`Chromium remote debugging tools running on port: ${chrome.port}`);
@@ -176,13 +171,18 @@ let launchChromium = async function(url) {
 
 // Get's the chrome-launcher default flags, minus the extensions and audio muting flags.
 async function SetDefaultFlags() {
-  // DEFAULT_FLAGS =  await chromeLauncher.Launcher.defaultFlags().filter(flag => '--disable-extensions' !== flag && '--mute-audio' !== flag);
+  DEFAULT_FLAGS =  await chromeLauncher.Launcher.defaultFlags().filter(flag => '--disable-extensions' !== flag && '--mute-audio' !== flag);
 }
 
 async function setTimer(interval) {
   timer = setIntervalAsync(
     async () => {
-      await launchChromium(currentUrl);
+      try {
+        await launchChromium(currentUrl);
+      } catch (err) {
+        console.log("Timer error: ", err);
+        process.exit(1);
+      }
     },
     interval
   )
@@ -199,11 +199,11 @@ async function main(){
   await launchChromium(url);
 }
 
-try {
-  main()
-} catch (e) {
-  `Main method error: ${console.log}`
-}
+
+main().catch(err => {
+  console.log("Main error: ", err);
+  process.exit(1);
+});
 
 // Start the API
 const app = express();
@@ -339,10 +339,39 @@ app.get('/version', (req, res) => {
   return res.status(200).send(version.toString());
 });
 
+app.get('/screenshot', async(req, res) => {
+  const fileName = process.hrtime.bigint() + '.png';
+  const filePath = path.join(os.tmpdir(), fileName);
+  try {
+    const child = spawn('scrot', [filePath]);
+
+    const statusCode = await new Promise( (res, rej) => { child.on('close', res); } );
+    if (statusCode != 0) {
+      return res.status(500).send("Screenshot command exited with non-zero return code.");
+    }
+
+    const fileContents = await readFile(filePath);
+    res.set('Content-Type', 'image/png');
+    return res.status(200).send(fileContents);
+  } catch(e) {
+    console.log(e.toString());
+    return res.status(500).send("Error occurred in screenshot code.");
+  } finally {
+    try {
+      await unlink(filePath);
+    } catch (e) {
+      console.log(e)
+    }
+  }
+});
+
 // scan endpoint - causes the device to rescan for local HTTP services
 app.post('/scan', (req, res) => {
  
-  main().catch("Main error: " + console.log);
+  main().catch(err => {
+    console.log("Scan error: ", err);
+    process.exit(1);
+  });
   return res.status(200).send('ok');
 });
 

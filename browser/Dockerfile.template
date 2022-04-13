@@ -1,26 +1,23 @@
 ARG NODEJS_VERSION="12"
 
-FROM balenalib/raspberrypi3-node:run
+FROM balenalib/%%BALENA_MACHINE_NAME%%-debian-node:${NODEJS_VERSION}-buster-run
+
 # install required packages
 RUN install_packages \
-    git \
-    gcc \
-    make \
-    libc6-dev \
-    chromium \
-    libwidevinecdm0 \
+    chromium-common=89.0.4389.114-1~deb10u1 \
+    chromium=89.0.4389.114-1~deb10u1 \
     libgles2-mesa \
     lsb-release \
     mesa-vdpau-drivers \
+    scrot \
     wget \
     x11-xserver-utils \
     xserver-xorg-input-evdev \
     xserver-xorg-legacy \
     xserver-xorg-video-fbdev \
     xserver-xorg xinit \
+    xinput \
     xterm 
-
-RUN cp -R /opt/WidevineCdm /usr/lib/chromium/
 
 WORKDIR /usr/src/app
 
@@ -53,17 +50,9 @@ RUN ln -s /usr/bin/chromium /usr/bin/chromium-browser || true
 
 # Set up the audio block. This won't have any effect if the audio block is not being used.
 RUN curl -skL https://raw.githubusercontent.com/balenablocks/audio/master/scripts/alsa-bridge/debian-setup.sh| sh
-
-
-ENV PULSE_SERVER=tcp:localhost:4317
+ENV PULSE_SERVER=tcp:audio:4317
 
 COPY VERSION .
 
-RUN git clone https://github.com/eskdale/pi-touchscreen-dimmer.git /usr/src/pi-touchscreen-dimmer
-WORKDIR /usr/src/pi-touchscreen-dimmer
-RUN make clean && make
-WORKDIR /usr/src/app
-
 # Start app
 CMD ["bash", "/usr/src/app/start.sh"]
-

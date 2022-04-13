@@ -1,4 +1,5 @@
 # balenablocks/browser
+ [![balena](https://github.com/balenablocks/browser/actions/workflows/balena.yml/badge.svg)](https://github.com/balenablocks/browser/actions/workflows/balena.yml)
 
 Provides a hardware accelerated web browser to present internal and external URLs on a connected display.
 The `browser` block is a docker image that runs a [Chromium](https://www.chromium.org/Home) browser via X11, optimized for balenaOS.
@@ -30,7 +31,7 @@ volumes:
 services:
 
   browser:
-    image: balenablocks/browser
+    image: bhcr.io/balenablocks/browser-<arch> # where <arch> is one of aarch64, arm32 or amd64
     privileged: true # required for UDEV to find plugged in peripherals such as a USB mouse
     network_mode: host
     ports:
@@ -39,6 +40,24 @@ services:
     volumes:
       - 'settings:/data' # Only required if using PERSISTENT flag (see below)
 ```
+
+To pin to a specific [version](CHANGELOG.md) of this block use:
+
+```yaml
+services:
+  browser:
+    image: bhcr.io/balenablocks/browser-<arch>/<version>
+    privileged: true # required for UDEV to find plugged in peripherals such as a USB mouse
+    network_mode: host
+    ports:
+        - '5011' # management API (optional)
+        - '35173' # Chromium debugging port (optional)
+    volumes:
+      - 'settings:/data' # Only required if using PERSISTENT flag (see below)
+```
+
+See [here](https://github.com/balena-io/open-balena-registry-proxy#usage) for more details about how to use blocks hosted in balenaCloud.
+
 ---
 
 ## Customization
@@ -61,12 +80,14 @@ The following environment variables allow configuration of the `browser` block:
 | Environment variable | Options | Default | Description |
 | --- | --- | --- | --- |
 |`LAUNCH_URL`|`http` or `https` URL|N\A|Web page to display|
+|`DISPLAY_NUM`|`n`|0|Display number to use|
 |`LOCAL_HTTP_DELAY`|Number (seconds)|0|Number of seconds to wait for a local HTTP service to start before trying to detect it|
 |`KIOSK`|`0`, `1`|`0`|Run in kiosk mode with no menus or status bars. <br/> `0` = off, `1` = on|
 |`SHOW_CURSOR`|`0`, `1`|`0`|Enables/disables the cursor when in kiosk mode<br/> `0` = off, `1` = on|
 |`FLAGS`|[many!](https://peter.sh/experiments/chromium-command-line-switches/)|N/A|Overrides the flags chromium is started with. Enter a space (\' \') separated list of flags (e.g. `--noerrdialogs --disable-session-crashed-bubble`) <br/> **Use with caution!**|
 |`PERSISTENT`|`0`, `1`|`0`|Enables/disables user profile data being stored on the device. **Note: you'll need to create a settings volume. See example above** <br/> `0` = off, `1` = on|
 |`ROTATE_DISPLAY`|`normal`, `left`, `right`, `inverted`|`normal`|Rotates the display|
+|`TOUCHSCREEN`|`string`|N\A|Name of Touch Input to rotate|
 |`ENABLE_GPU`|`0`, `1`|0|Enables the GPU rendering. Necessary for Pi3B+ to display YouTube videos. <br/> `0` = off, `1` = on|
 |`WINDOW_SIZE`|`x,y`|Detected screen resolution|Sets the browser window size, such as `800,600`. <br/> **Note:** Reverse the dimensions if you also rotate the display to `left` or `right` |
 |`WINDOW_POSITION`|`x,y`|`0,0`|Specifies the browser window position on the screen|
@@ -198,6 +219,10 @@ Returns the flags Chromium was started with
 
 #### **GET** /version
 Returns the version of Chromium that `browser` is running
+
+#### **GET** /screenshot
+Uses [scrot](https://opensource.com/article/17/11/taking-screen-captures-linux-command-line-scrot) to take a screenshot of the chromium window. 
+The screenshot will be saved as a temporary file in the container.
 
 ---
 

@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# this allows chromium sandbox to run, see https://github.com/balena-os/meta-balena/issues/2319
+sysctl -w user.max_user_namespaces=10000
+
 # Run balena base image entrypoint script
 /usr/bin/entry.sh echo "Running balena base image entrypoint..."
 
@@ -15,7 +18,13 @@ echo "balenaBlocks browser version: $(<VERSION)"
 echo "Setting CPU Scaling Governor to 'performance'"
 echo 'performance' > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor 
 
- #Set whether to show a cursor or not
+# check if display number envar was set
+if [[ -z "$DISPLAY_NUM" ]]
+  then
+    export DISPLAY_NUM=0
+fi
+
+# set whether to show a cursor or not
 if [[ ! -z $SHOW_CURSOR ]] && [[ "$SHOW_CURSOR" -eq "1" ]]
   then
     export CURSOR=''
@@ -35,19 +44,10 @@ then
 	fi
 fi
 
-# Set screen to max brightness
-echo 255 >  /sys/class/backlight/rpi_backlight/brightness
-# Run screen dimming on idle
-/usr/src/pi-touchscreen-dimmer/timeout 60 15 event0 &
-
 # set up the user data area
 chown -R chromium:chromium /data
 mkdir -p /data/chromium
 rm -f /data/chromium/SingletonLock
-
-# Set the timezone (or Pandora authentication won't work)
-ln -fs "/usr/share/zoneinfo/America/Los_Angeles" /etc/localtime
-dpkg-reconfigure tzdata
 
 # we can't maintain the environment with su, because we are logging in to a new session
 # so we need to manually pass in the environment variables to maintain, in a whitelist
@@ -57,4 +57,5 @@ environment=$(env | grep -v -w '_' | awk -F= '{ st = index($0,"=");print substr(
 environment="${environment::-1}"
 
 # launch Chromium and whitelist the enVars so that they pass through to the su session
-su -w $environment -c "export DISPLAY=:0 && startx /usr/src/app/startx.sh $CURSOR" - chromium
+su -w $environment -c "export DISPLAY=:$DISPLAY_NUM && startx /usr/src/app/startx.sh $CURSOR" - chromium
+balena-idle
