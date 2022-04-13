@@ -3,7 +3,8 @@ version: '2'
 volumes:
   spotifycache:
   snapcastcache:
-  browsercache:
+  #browsercache: # gone to the big volume farm in the sky
+  browsercache2:
   homeassistantcache:
 
 services:
@@ -74,7 +75,7 @@ services:
     privileged: true # required for UDEV to find plugged in peripherals such as a USB mouse
     network_mode: host
     volumes:
-      - 'browsercache:/data' # Only required if using PERSISTENT flag (see below)
+      - 'browsercache2:/data' # Only required if using PERSISTENT flag (see below)
 
   home-automation:
     build: ./plugins/home-automation
