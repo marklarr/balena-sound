@@ -11,6 +11,11 @@ RUN install_packages \
     mesa-vdpau-drivers \
     scrot \
     wget \
+    git \
+    gcc \
+    make \
+    libc6-dev \
+    chromium \
     x11-xserver-utils \
     xserver-xorg-input-evdev \
     xserver-xorg-legacy \
