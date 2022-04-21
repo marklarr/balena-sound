@@ -25,6 +25,7 @@ PLATFORMS
 
 DEPENDENCIES
   eventmachine
+  rack
   sinatra
   thin
 
