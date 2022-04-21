@@ -39,3 +39,4 @@
       
     * Homeassistant plugin that sends API requests to sinatra app
       * This docker container is not streaming an audio. Just simply sending API requests to the sinatra app in the other container.
+      * https://developers.home-assistant.io/docs/frontend/custom-ui/custom-card/
