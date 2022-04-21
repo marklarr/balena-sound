@@ -66,6 +66,14 @@ services:
     labels:
       io.balena.features.dbus: 1
 
+  music-streamer-web-ui:
+    build: ./plugins/music-streamer-web-ui
+    restart: on-failure
+    network_mode: host
+    privileged: true
+    labels:
+      io.balena.features.dbus: 1
+
   browser:
     build: ./browser
     privileged: true # required for UDEV to find plugged in peripherals such as a USB mouse

@@ -1,1 +1,1 @@
-sleep 100000
+cd /usr/src && ruby app.rb
