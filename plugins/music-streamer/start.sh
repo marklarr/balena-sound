@@ -1,1 +1,1 @@
-cd /usr/src && ruby app.rb
+cd /usr/src && bundle install && ruby app.rb
