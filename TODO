@@ -16,3 +16,26 @@
   * Setup deconz in a separate balena block 
     * Dockerfile: https://github.com/braintreeps/vim_dotfiles.git
     * USB device: /dev/serial/by-id/usb-dresden_elektronik_ingenieurtechnik_GmbH_ConBee_II_DE2458729-if00
+
+  * Music Player
+    * Docker container running a sinatra API for controlling audio streaming to PulseAudio
+      * Stream audio to PulseAudio socket
+        *
+      * Media Player
+        * Run as a background worker 
+        * API controls worker via event machine
+        * Example: https://gist.github.com/mfojtik/248921
+      * Media
+        * Pandora Stations
+          * PianoBar
+            * Uses libao. Configure libao to go to Pulse Sink
+            * Start pianobar process from ruby
+               * Send inputs to process (email pass from secrets, hotkeys in pianobar docs for changing stations and songs etc)
+               * Read station list from process
+        * Spotify Playlists
+        * Youtube Playlists 
+          * PULSE_SERVER=tcp:localhost:4317 ffplay -nodisp <(youtube-dl -f 96  'https://www.youtube.com/watch?v=5qap5aO4i9A' -o -) 2> /dev/null
+
+      
+    * Homeassistant plugin that sends API requests to sinatra app
+      * This docker container is not streaming an audio. Just simply sending API requests to the sinatra app in the other container.

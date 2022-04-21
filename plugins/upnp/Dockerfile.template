@@ -1,9 +1,8 @@
-FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:buster
-WORKDIR /usr/src
+FROM balenalib/%%BALENA_MACHINE_NAME%%-debian-ruby:3.1.2-buster
 
 ENV PULSE_SERVER=tcp:localhost:4317
 
-RUN install_packages gmediarender gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly gstreamer1.0-pulseaudio
+RUN install_packages pianobar youtube-dl ffplay
 
 COPY start.sh /usr/src/
 
