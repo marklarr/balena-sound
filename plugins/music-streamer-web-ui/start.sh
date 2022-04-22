@@ -1,1 +1,1 @@
-cd /usr/src && npm start
+cd /usr/src && BALENA=$BALENA npm start

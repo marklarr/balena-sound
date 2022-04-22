@@ -4,6 +4,9 @@ require 'eventmachine'
 require 'json'
 require 'sys/proctable'
 
+PULSE_SERVER = ENV["BALENA"] ? "PULSE_SERVER=tcp:localhost:4317" : ""
+puts "pulse server: #{PULSE_SERVER}"
+
 class Worker < EM::Connection
   attr_reader :query
 
@@ -33,8 +36,7 @@ class Worker < EM::Connection
   def _play_lofi_radio
     Thread.new do
       # TODO: env var
-      # @currently_playing_pid = Process.spawn("/bin/bash -c \"PULSE_SERVER=tcp:localhost:4317 ffplay -nodisp <(youtube-dl -f 96  'https://www.youtube.com/watch?v=5qap5aO4i9A' -o -) 2> /dev/null\"")
-      @currently_playing_pid = Process.spawn("/bin/bash -c \"PULSE_SERVER=tcp:192.168.0.23:4317 ffplay -nodisp <(youtube-dl -f 96  'https://www.youtube.com/watch?v=5qap5aO4i9A' -o -) 2> /dev/null\"")
+      @currently_playing_pid = Process.spawn("/bin/bash -c \"#{PULSE_SERVER} ffplay -nodisp <(youtube-dl -f 96  'https://www.youtube.com/watch?v=5qap5aO4i9A' -o -) 2> /dev/null\"")
       Process.wait(@currently_playing_pid)
     end
   end

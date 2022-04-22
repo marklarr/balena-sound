@@ -9,9 +9,13 @@ const styles = {
   },
 }
 
+console.log(process.env.REACT_APP_BALENA)
+const MUSIC_STREAMER_API_ROOT = process.env.REACT_APP_BALENA === "1" ? "192.168.0.23:3434" : "localhost:3434"
+console.log("music-streamer api root: " + MUSIC_STREAMER_API_ROOT)
+
 function playLofiHipHopRadio() {
   // TODO: env var
-  fetch("http://192.168.0.23:3434/play/lofi_hip_hop_radio", {
+  fetch("http://" + MUSIC_STREAMER_API_ROOT + "/play/lofi_hip_hop_radio", {
     method:'POST',
     mode: 'no-cors'
   }).catch(console.error)
@@ -20,7 +24,7 @@ function playLofiHipHopRadio() {
 
 function stop() {
   // TODO: env var
-  fetch("http://192.168.0.23:3434/stop", {
+  fetch("http://" + MUSIC_STREAMER_API_ROOT + "/stop", {
     method:'POST',
     mode: 'no-cors'
   }).catch(console.error)
