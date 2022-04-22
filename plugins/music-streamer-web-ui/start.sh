@@ -1,1 +1,1 @@
-cd /usr/src && npm install && npm start
+cd /usr/src && npm start
