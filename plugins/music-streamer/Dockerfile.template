@@ -2,7 +2,7 @@ FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:buster
 
 ENV PULSE_SERVER=tcp:localhost:4317
 
-RUN install_packages pianobar ffmpeg ruby python
+RUN install_packages pianobar ffmpeg ruby python ruby-dev libcdev libssl-dev make g++
 RUN gem install bundler
 
 RUN curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl

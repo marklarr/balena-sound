@@ -4,5 +4,6 @@ ENV PULSE_SERVER=tcp:localhost:4317
 
 COPY start.sh /usr/src/
 ADD src /usr/src
+RUN rm -rf /usr/src/node_modules
 
 CMD [ "/bin/bash", "/usr/src/start.sh" ]

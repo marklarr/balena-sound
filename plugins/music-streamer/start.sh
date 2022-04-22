@@ -1,2 +1,5 @@
-sleep 100000
-cd /usr/src && bundle install && ruby app.rb
+cd /usr/src
+
+bundle config build.eventmachine --with-cppflags=-I/usr/include/openssl
+
+bundle install && ruby app.rb
