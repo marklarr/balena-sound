@@ -29,6 +29,10 @@
         * Pandora Stations
           * PianoBar
             * Uses libao. Configure libao to go to Pulse Sink
+              * /etc/libao.conf
+                * default_driver=pulse
+                * server=tcp:localhost:4317
+ 
             * Start pianobar process from ruby
                * Send inputs to process (email pass from secrets, hotkeys in pianobar docs for changing stations and songs etc)
                * Read station list from process

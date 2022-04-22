@@ -16,6 +16,7 @@ class Worker < EM::Connection
   def process_message(message)
     case message['action']
     when 'lofi_hip_hop_radio'
+      # don't play if already playing; no-op instead
       puts "playing lofi_hip_hop_radio"
       _stop
       _play_lofi_radio
