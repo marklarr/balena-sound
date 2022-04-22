@@ -11,7 +11,7 @@ const styles = {
 
 function playLofiHipHopRadio() {
   // TODO: env var
-  fetch("http://localhost:3434/play/lofi_hip_hop_radio", {
+  fetch("http://192.168.0.23:3434/play/lofi_hip_hop_radio", {
     method:'POST',
     mode: 'no-cors'
   }).catch(console.error)
@@ -20,7 +20,7 @@ function playLofiHipHopRadio() {
 
 function stop() {
   // TODO: env var
-  fetch("http://localhost:3434/stop", {
+  fetch("http://192.168.0.23:3434/stop", {
     method:'POST',
     mode: 'no-cors'
   }).catch(console.error)
