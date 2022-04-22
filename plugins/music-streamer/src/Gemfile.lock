@@ -3,6 +3,7 @@ GEM
   specs:
     daemons (1.4.1)
     eventmachine (1.2.7)
+    ffi (1.15.5)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
     rack (2.2.3)
@@ -14,6 +15,8 @@ GEM
       rack (~> 2.2)
       rack-protection (= 2.2.0)
       tilt (~> 2.0)
+    sys-proctable (1.2.6)
+      ffi
     thin (1.8.1)
       daemons (~> 1.0, >= 1.0.9)
       eventmachine (~> 1.0, >= 1.0.4)
@@ -25,8 +28,8 @@ PLATFORMS
 
 DEPENDENCIES
   eventmachine
-  rack
   sinatra
+  sys-proctable
   thin
 
 BUNDLED WITH

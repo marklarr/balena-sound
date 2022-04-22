@@ -2,6 +2,7 @@ require 'rack'
 require 'sinatra/base'
 require 'eventmachine'
 require 'json'
+require 'sys/proctable'
 
 class Worker < EM::Connection
   attr_reader :query
@@ -33,8 +34,8 @@ class Worker < EM::Connection
 
   def _stop
     if @currently_playing_pid
-      all_pids_to_kill = recurse_child_pids(@currently_playing_pid)
-      all_pids_to_kill < @currently_playing_pid
+      all_pids_to_kill = _recurse_child_pids(@currently_playing_pid)
+      all_pids_to_kill << @currently_playing_pid
       all_pids_to_kill.sort.reverse.each do |pid_to_kill|
         `kill -9 #{pid_to_kill}`
       end
@@ -45,7 +46,7 @@ class Worker < EM::Connection
   def _recurse_child_pids(parent_pid)
     child_pids = Sys::ProcTable.ps.select { |pe| pe.ppid == parent_pid }.map(&:pid)
     child_pids.each_with_object(child_pids.dup) do |child_pid, acc|
-      acc.concat(recurse_child_pids(child_pid))
+      acc.concat(_recurse_child_pids(child_pid))
     end
   end
 end
