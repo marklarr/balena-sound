@@ -9,13 +9,18 @@ class Worker < EM::Connection
 
   def receive_data(data)
     @currently_playing_pid ||= nil
-    message =  JSON::parse(data)
+    messages = JSON.parse("[#{data.gsub(/\}.*?\{/m, '},{')}]")
+    messages.each { |message| process_message(message) }
+  end
 
+  def process_message(message)
     case message['action']
     when 'lofi_hip_hop_radio'
+      puts "playing lofi_hip_hop_radio"
       _stop
       _play_lofi_radio
     when 'stop'
+      puts "stopping"
       _stop
     else
       raise "unknown action #{message['action']}"
@@ -27,20 +32,22 @@ class Worker < EM::Connection
   def _play_lofi_radio
     Thread.new do
       # TODO: env var
-      @currently_playing_pid = Process.spawn("/bin/bash -c \"PULSE_SERVER=tcp:localhost:4317 ffplay -nodisp <(youtube-dl -f 96  'https://www.youtube.com/watch?v=5qap5aO4i9A' -o -) 2> /dev/null\"")
+      # @currently_playing_pid = Process.spawn("/bin/bash -c \"PULSE_SERVER=tcp:localhost:4317 ffplay -nodisp <(youtube-dl -f 96  'https://www.youtube.com/watch?v=5qap5aO4i9A' -o -) 2> /dev/null\"")
+      @currently_playing_pid = Process.spawn("/bin/bash -c \"PULSE_SERVER=tcp:192.168.0.23:4317 ffplay -nodisp <(youtube-dl -f 96  'https://www.youtube.com/watch?v=5qap5aO4i9A' -o -) 2> /dev/null\"")
       Process.wait(@currently_playing_pid)
     end
   end
 
   def _stop
-    if @currently_playing_pid
-      all_pids_to_kill = _recurse_child_pids(@currently_playing_pid)
-      all_pids_to_kill << @currently_playing_pid
-      all_pids_to_kill.sort.reverse.each do |pid_to_kill|
-        `kill -9 #{pid_to_kill}`
-      end
-      @currently_playing_pid = nil
-    end
+    `killall ffplay`
+    # if @currently_playing_pid
+    #   all_pids_to_kill = _recurse_child_pids(@currently_playing_pid)
+    #   all_pids_to_kill << @currently_playing_pid
+    #   all_pids_to_kill.sort.reverse.each do |pid_to_kill|
+    #     `kill -9 #{pid_to_kill}`
+    #   end
+    #   @currently_playing_pid = nil
+    # end
   end
 
   def _recurse_child_pids(parent_pid)
