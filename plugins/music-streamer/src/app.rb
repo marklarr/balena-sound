@@ -23,19 +23,29 @@ class Worker < EM::Connection
 
   private
 
-	def _play_lofi_radio
+  def _play_lofi_radio
     Thread.new do
       # TODO: env var
       @currently_playing_pid = Process.spawn("/bin/bash -c \"PULSE_SERVER=tcp:localhost:4317 ffplay -nodisp <(youtube-dl -f 96  'https://www.youtube.com/watch?v=5qap5aO4i9A' -o -) 2> /dev/null\"")
       Process.wait(@currently_playing_pid)
     end
-	end
+  end
 
   def _stop
     if @currently_playing_pid
-      `pkill -P #{@currently_playing_pid}`
-      Process.kill(:SIGKILL, @currently_playing_pid)
+      all_pids_to_kill = recurse_child_pids(@currently_playing_pid)
+      all_pids_to_kill < @currently_playing_pid
+      all_pids_to_kill.sort.reverse.each do |pid_to_kill|
+        `kill -9 #{pid_to_kill}`
+      end
       @currently_playing_pid = nil
+    end
+  end
+
+  def _recurse_child_pids(parent_pid)
+    child_pids = Sys::ProcTable.ps.select { |pe| pe.ppid == parent_pid }.map(&:pid)
+    child_pids.each_with_object(child_pids.dup) do |child_pid, acc|
+      acc.concat(recurse_child_pids(child_pid))
     end
   end
 end
@@ -64,7 +74,7 @@ class App < Sinatra::Base
 
   set server: 'thin'
 
-	set port: 3434
+  set port: 3434
   enable :xhtml
   enable :dump_errors
   enable :show_errors
