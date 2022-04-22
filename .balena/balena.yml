@@ -1,0 +1,5 @@
+build-secrets:
+  services:
+    music-streamer:
+      - source: pianobar-config
+        dest: pianobar-config

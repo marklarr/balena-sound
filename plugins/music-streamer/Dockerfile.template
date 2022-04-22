@@ -11,4 +11,7 @@ RUN chmod a+rx /usr/local/bin/youtube-dl
 ADD src /usr/src/
 COPY start.sh /usr/src/
 
+RUN mkdir -p /root/.config/pianobar
+RUN cp /run/pianobar-config /root/.config/pianobar/config
+
 CMD [ "/bin/bash", "/usr/src/start.sh" ]
