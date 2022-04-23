@@ -3,6 +3,7 @@ require 'sinatra/base'
 require 'eventmachine'
 require 'json'
 require 'sys/proctable'
+require 'open3'
 
 PULSE_SERVER = ENV["BALENA"] ? "PULSE_SERVER=tcp:localhost:4317" : ""
 puts "pulse server: #{PULSE_SERVER}"
@@ -23,6 +24,9 @@ class Worker < EM::Connection
       puts "playing lofi_hip_hop_radio"
       _stop
       _play_lofi_radio
+    when 'pandora_radio'
+      _stop
+      _play_pandora_radio
     when 'stop'
       puts "stopping"
       _stop
@@ -41,8 +45,27 @@ class Worker < EM::Connection
     end
   end
 
+  STATION = 26 # thumbprint radio TODO: allow as input later
+  def _play_pandora_radio
+    Thread.new do
+      stdin, stdout, stderr, wait_thr = Open3.popen3("/bin/bash -lc 'pianobar'")
+      Timeout::timeout(5) do
+        pianobar_output = ""
+        until pianobar_output.include?("Select station:") do
+          sleep 1
+          begin
+            pianobar_output += stdout.read_nonblock(1024 * 10)
+          rescue IO::EAGAINWaitReadable => e
+          end
+        end
+      end
+      stdin.puts(STATION)
+    end
+  end
+
   def _stop
     `killall ffplay`
+    `killall pianobar`
     # if @currently_playing_pid
     #   all_pids_to_kill = _recurse_child_pids(@currently_playing_pid)
     #   all_pids_to_kill << @currently_playing_pid
@@ -97,6 +120,11 @@ class App < Sinatra::Base
 
   post '/play/lofi_hip_hop_radio' do
     broker.send_data({:action => "lofi_hip_hop_radio"}.to_json)
+    201
+  end
+
+  post '/play/pandora_radio' do
+    broker.send_data({:action => "pandora_radio"}.to_json)
     201
   end
 

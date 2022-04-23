@@ -22,6 +22,15 @@ function playLofiHipHopRadio() {
   // TODO:Handle error status code
 }
 
+function playPandoraRadio() {
+  // TODO: env var
+  fetch("http://" + MUSIC_STREAMER_API_ROOT + "/play/pandora_radio", {
+    method:'POST',
+    mode: 'no-cors'
+  }).catch(console.error)
+  // TODO:Handle error status code
+}
+
 function stop() {
   // TODO: env var
   fetch("http://" + MUSIC_STREAMER_API_ROOT + "/stop", {
@@ -37,6 +46,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <button style={{...styles.button,...{backgroundColor: '#007AFF'}}} onClick={playLofiHipHopRadio}> Play Lofi Hip-Hop Radio </button>
+        <button style={{...styles.button,...{backgroundColor: '#007AFF'}}} onClick={playPandoraRadio}> Play Pandora Radio </button>
         <button style={{...styles.button,...{backgroundColor: 'red'}}}  onClick={stop}> Stop </button>
       </header>
     </div>
