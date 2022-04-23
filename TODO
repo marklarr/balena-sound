@@ -36,6 +36,7 @@
             * Start pianobar process from ruby
                * Send inputs to process (email pass from secrets, hotkeys in pianobar docs for changing stations and songs etc)
                * Read station list from process
+            * make an event_cmd script to get song info
         * Spotify Playlists
         * Youtube Playlists 
           * PULSE_SERVER=tcp:localhost:4317 ffplay -nodisp <(youtube-dl -f 96  'https://www.youtube.com/watch?v=5qap5aO4i9A' -o -) 2> /dev/null
