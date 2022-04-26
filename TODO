@@ -18,6 +18,8 @@
     * USB device: /dev/serial/by-id/usb-dresden_elektronik_ingenieurtechnik_GmbH_ConBee_II_DE2458729-if00
 
   * Music Player
+    * Remote Controls
+      *  curl  -X POST -H "Content-Type:application/json" -H "Accept:application/json" -d '{"id": "1", "jsonrpc":"2.0", "method":"Client.SetVolume","params":{"id":"75b73637db7aad2e34231cf3f0bbb4a6", "volume":{"muted": "false", "percent": 40}}}' 192.168.0.23:1780/jsonrpc
     * Docker container running a sinatra API for controlling audio streaming to PulseAudio
       * Stream audio to PulseAudio socket
         *

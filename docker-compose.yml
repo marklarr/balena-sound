@@ -74,6 +74,14 @@ services:
     labels:
       io.balena.features.dbus: 1
 
+  weather-forecast-web-ui:
+    build: ./plugins/weather-forecast-web-ui
+    restart: on-failure
+    network_mode: host
+    privileged: true
+    labels:
+      io.balena.features.dbus: 1
+
   browser:
     build: ./browser
     privileged: true # required for UDEV to find plugged in peripherals such as a USB mouse
