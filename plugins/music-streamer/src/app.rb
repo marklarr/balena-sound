@@ -1,15 +1,22 @@
 require 'rack'
 require 'sinatra/base'
+require 'sinatra-websocket'
 require 'eventmachine'
 require 'json'
 require 'sys/proctable'
 require 'open3'
+
 
 PULSE_SERVER = ENV["BALENA"] ? "PULSE_SERVER=tcp:localhost:4317" : ""
 puts "pulse server: #{PULSE_SERVER}"
 
 class Worker < EM::Connection
   attr_reader :query
+
+  def initialize(*args)
+    @app = args.first
+    super
+  end
 
   def receive_data(data)
     @currently_playing_pid ||= nil
@@ -18,13 +25,16 @@ class Worker < EM::Connection
   end
 
   def process_message(message)
+    puts message
     case message['action']
     when 'lofi_hip_hop_radio'
-      # don't play if already playing; no-op instead
+      # TODO: don't play if already playing; no-op instead
       puts "playing lofi_hip_hop_radio"
       _stop
       _play_lofi_radio
     when 'pandora_radio'
+      puts @app.settings.sockets.inspect
+       @app.settings.sockets.each { |s| puts s.inspect; s.send("hi") }
       _stop
       _play_pandora_radio
     when 'stop'
@@ -85,7 +95,6 @@ class Worker < EM::Connection
 end
 
 class Broker
-
   def initialize(app, options = {})
     @app = app
     puts "B: Starting broker"
@@ -109,6 +118,7 @@ class App < Sinatra::Base
   set server: 'thin'
 
   set port: 3434
+  set sockets: []
   enable :xhtml
   enable :dump_errors
   enable :show_errors
@@ -116,6 +126,28 @@ class App < Sinatra::Base
 
   helpers do
     def broker; env['broker']; end
+  end
+
+  def initialize(*args)
+    EventMachine::start_server '127.0.0.1', '4000', Worker, self
+    super
+  end
+
+  get '/websocket/updates' do
+    if request.websocket?
+      request.websocket do |ws|
+        ws.onopen do
+          ws.send("Hello World!")
+          settings.sockets << ws
+        end
+
+        ws.onclose do
+          settings.sockets.delete(ws)
+        end
+      end
+    else
+      404
+    end
   end
 
   post '/play/lofi_hip_hop_radio' do
@@ -135,7 +167,7 @@ class App < Sinatra::Base
 
 end
 
-EM::run {
-  EventMachine::start_server '127.0.0.1', '4000', Worker
+EM::run do
   App.run!
-}
+end
+
