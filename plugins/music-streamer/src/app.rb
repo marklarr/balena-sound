@@ -26,6 +26,7 @@ class Worker < EM::Connection
 
   def process_message(message)
     puts message
+    _update_status!(message['action'])
     case message['action']
     when 'lofi_hip_hop_radio'
       # TODO: don't play if already playing; no-op instead
@@ -33,8 +34,6 @@ class Worker < EM::Connection
       _stop
       _play_lofi_radio
     when 'pandora_radio'
-      puts @app.settings.sockets.inspect
-       @app.settings.sockets.each { |s| puts s.inspect; s.send("hi") }
       _stop
       _play_pandora_radio
     when 'stop'
@@ -45,12 +44,18 @@ class Worker < EM::Connection
     end
   end
 
+  def _update_status!(status)
+    @app.settings.sockets.each { |s| puts s.send(status) }
+    @app.settings.worker_status = status
+  end
+
   private
 
   def _play_lofi_radio
     Thread.new do
       # TODO: env var
       @currently_playing_pid = Process.spawn("/bin/bash -c \"#{PULSE_SERVER} ffplay -nodisp <(youtube-dl -f 96  'https://www.youtube.com/watch?v=5qap5aO4i9A' -o -) 2> /dev/null\"")
+      _update_status!("Playing Lofi")
       Process.wait(@currently_playing_pid)
     end
   end
@@ -70,12 +75,14 @@ class Worker < EM::Connection
         end
       end
       stdin.puts(STATION)
+      _update_status!("Playing Pandora")
     end
   end
 
   def _stop
     `killall ffplay`
     `killall pianobar`
+    _update_status!("Stopped.")
     # if @currently_playing_pid
     #   all_pids_to_kill = _recurse_child_pids(@currently_playing_pid)
     #   all_pids_to_kill << @currently_playing_pid
@@ -119,6 +126,7 @@ class App < Sinatra::Base
 
   set port: 3434
   set sockets: []
+  set worker_status: ""
   enable :xhtml
   enable :dump_errors
   enable :show_errors
@@ -137,7 +145,7 @@ class App < Sinatra::Base
     if request.websocket?
       request.websocket do |ws|
         ws.onopen do
-          ws.send("Hello World!")
+           ws.send(settings.worker_status)
           settings.sockets << ws
         end
 
