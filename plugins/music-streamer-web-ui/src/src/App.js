@@ -16,7 +16,7 @@ const styles = {
 console.log(process.env.REACT_APP_BALENA)
 const MUSIC_STREAMER_API_ROOT = process.env.REACT_APP_BALENA === "1" ? "192.168.0.23:3434" : "localhost:3434"
 console.log("music-streamer api root: " + MUSIC_STREAMER_API_ROOT)
-var webSocket = new WebSocket("ws://localhost:3434/websocket/updates")
+var webSocket = new WebSocket("ws://"+MUSIC_STREAMER_API_ROOT+"/websocket/updates")
 webSocket.onmessage = function (e) {
   console.log("From Server: " + e.data);
   document.getElementById("socket-status").innerHTML = e.data

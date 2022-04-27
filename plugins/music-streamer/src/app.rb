@@ -145,7 +145,7 @@ class App < Sinatra::Base
     if request.websocket?
       request.websocket do |ws|
         ws.onopen do
-           ws.send(settings.worker_status)
+          ws.send(settings.worker_status)
           settings.sockets << ws
         end
 
