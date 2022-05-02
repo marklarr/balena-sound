@@ -7,3 +7,4 @@ node_modules
 build
 core/multiroom/server/snapweb
 .balena/secrets
+plugins/music-streamer/src/logs

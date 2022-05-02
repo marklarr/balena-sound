@@ -8,3 +8,12 @@ gem "eventmachine"
 gem "thin"
 gem "sys-proctable"
 
+group :test do
+  gem "rack-test"
+  gem "rspec"
+  gem "pry-byebug"
+  gem "irb"
+  gem "rdoc"
+  gem "webmock"
+end
+

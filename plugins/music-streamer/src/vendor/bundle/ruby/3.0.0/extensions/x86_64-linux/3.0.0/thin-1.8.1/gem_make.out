@@ -1,0 +1,17 @@
+current directory: /home/marklarr/github/balena-sound/plugins/music-streamer/src/vendor/bundle/ruby/3.0.0/gems/thin-1.8.1/ext/thin_parser
+/usr/bin/ruby -I /usr/lib/ruby/3.0.0 -r ./siteconf20220502-3859-jra0jd.rb extconf.rb
+checking for main() in -lc... yes
+creating Makefile
+
+current directory: /home/marklarr/github/balena-sound/plugins/music-streamer/src/vendor/bundle/ruby/3.0.0/gems/thin-1.8.1/ext/thin_parser
+make DESTDIR\= clean
+
+current directory: /home/marklarr/github/balena-sound/plugins/music-streamer/src/vendor/bundle/ruby/3.0.0/gems/thin-1.8.1/ext/thin_parser
+make DESTDIR\=
+compiling parser.c
+compiling thin.c
+linking shared-object thin_parser.so
+
+current directory: /home/marklarr/github/balena-sound/plugins/music-streamer/src/vendor/bundle/ruby/3.0.0/gems/thin-1.8.1/ext/thin_parser
+make DESTDIR\= install
+/usr/bin/install -c -m 0755 thin_parser.so ./.gem.20220502-3859-fabhkj

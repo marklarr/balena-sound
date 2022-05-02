@@ -7,6 +7,7 @@ require 'sys/proctable'
 require 'open3'
 require "uri"
 require "net/http"
+require 'logger'
 
 # TODO:
 # youtube-dl --get-thumbnail 'https://www.youtube.com/watch?v=5qap5aO4i9A'
@@ -113,6 +114,24 @@ puts "pulse server: #{PULSE_SERVER}"
 MAX_VOLUME = 100
 MIN_VOLUME = 0
 
+module ShellUtils
+  def self.spawn(*args)
+    Process.spawn(*args)
+  end
+
+  def self.wait(*args)
+    Process.wait(*args)
+  end
+
+  def self.exec(cmd)
+    `#{cmd}`
+  end
+
+  def self.popen3(*args)
+    Open3.popen3(*args)
+  end
+end
+
 module SnapcastGateway
   def self.http_post(body)
     http = Net::HTTP.new("192.168.0.23", 1780)
@@ -154,15 +173,14 @@ class Worker < EM::Connection
   end
 
   def process_message(message)
-    puts message
+    puts "[#{self.class}] message received: #{message}"
     _update_status!(message['action'])
     case message['action']
-    when 'lofi_hip_hop_radio'
+    when 'stream_youtube'
       # TODO: don't play if already playing; no-op instead
-      puts "playing lofi_hip_hop_radio"
       _stop
       _play_lofi_radio
-    when 'pandora_radio'
+    when 'stream_pandora_radio'
       _stop
       _play_pandora_radio
     when 'stop'
@@ -178,21 +196,23 @@ class Worker < EM::Connection
     @app.settings.worker_status = status
   end
 
-  private
-
   def _play_lofi_radio
-    Thread.new do
+    _thread do
       # TODO: env var
-      @currently_playing_pid = Process.spawn("/bin/bash -c \"#{PULSE_SERVER} ffplay -nodisp <(youtube-dl -f 96  'https://www.youtube.com/watch?v=5qap5aO4i9A' -o -) 2> /dev/null\"")
+      @currently_playing_pid = ShellUtils.spawn("/bin/bash -c \"#{PULSE_SERVER} ffplay -nodisp <(youtube-dl -f 96  'https://www.youtube.com/watch?v=5qap5aO4i9A' -o -) 2> /dev/null\"")
       _update_status!("Playing Lofi")
-      Process.wait(@currently_playing_pid)
+      ShellUtils.wait(@currently_playing_pid)
+    end
+
+    def _thread
+      Thread.new(&block)
     end
   end
 
   STATION = 26 # thumbprint radio TODO: allow as input later
   def _play_pandora_radio
-    Thread.new do
-      stdin, stdout, stderr, wait_thr = Open3.popen3("/bin/bash -lc 'pianobar'")
+    _thread do
+      stdin, stdout, stderr, wait_thr = ShellUtils.popen3("/bin/bash -lc 'pianobar'")
       Timeout::timeout(5) do
         pianobar_output = ""
         until pianobar_output.include?("Select station:") do
@@ -209,14 +229,14 @@ class Worker < EM::Connection
   end
 
   def _stop
-    `killall ffplay`
-    `killall pianobar`
+    ShellUtils.exec("killall ffplay")
+    ShellUtils.exec("killall pianobar")
     _update_status!("Stopped.")
     # if @currently_playing_pid
     #   all_pids_to_kill = _recurse_child_pids(@currently_playing_pid)
     #   all_pids_to_kill << @currently_playing_pid
     #   all_pids_to_kill.sort.reverse.each do |pid_to_kill|
-    #     `kill -9 #{pid_to_kill}`
+    #     ShellUtils.exec("kill -9 #{pid_to_kill}")
     #   end
     #   @currently_playing_pid = nil
     # end
@@ -246,8 +266,7 @@ class Broker
 
 end
 
-class App < Sinatra::Base
-
+class MusicStreamerApplication < Sinatra::Base
   use Rack::CommonLogger
   use Broker
 
@@ -261,14 +280,22 @@ class App < Sinatra::Base
   enable :show_errors
   enable :show_exceptions
 
-  helpers do
-    def broker; env['broker']; end
+  configure :test do
+    set :raise_errors, true
+    set :dump_errors, false
+    set :show_exceptions, false
   end
+
 
   def initialize(*args)
     EventMachine::start_server '127.0.0.1', '4000', Worker, self
     super
   end
+
+  helpers do
+    def broker; env['broker']; end
+  end
+
 
   get '/websocket/updates' do
     if request.websocket?
@@ -287,17 +314,17 @@ class App < Sinatra::Base
     end
   end
 
-  post '/play/lofi_hip_hop_radio' do
-    broker.send_data({:action => "lofi_hip_hop_radio"}.to_json)
+  post '/stream/youtube' do
+    broker.send_data({:action => "stream_youtube"}.to_json)
     201
   end
 
-  post '/play/pandora_radio' do
-    broker.send_data({:action => "pandora_radio"}.to_json)
+  post '/stream/pandora_radio' do
+    broker.send_data({:action => "stream_pandora_radio"}.to_json)
     201
   end
 
-  post '/stop' do
+  post '/stream/stop' do
     broker.send_data({:action => "stop"}.to_json)
     201
   end
@@ -339,7 +366,7 @@ class App < Sinatra::Base
   end
 end
 
-EM::run do
-  App.run!
-end
+# EM::run do
+#   MusicStreamerApplication.run!
+# end
 
