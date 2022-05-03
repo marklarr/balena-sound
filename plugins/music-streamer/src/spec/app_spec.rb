@@ -14,6 +14,7 @@ RSpec.describe "Full Stack" do
   end
 
   before(:each) do
+    allow(ShellUtils).to receive(:spawn)
     allow(ShellUtils).to receive(:exec)
     allow(ShellUtils).to receive(:popen3)
     allow(ShellUtils).to receive(:wait)
@@ -70,11 +71,6 @@ RSpec.describe "Full Stack" do
       it "streams the youtube channel using the appropriate bash command" do
         allow(@worker_mock).to receive(:_thread) { |&block| block.call }
 
-        expect(ShellUtils).to receive(:exec)
-          .with("killall ffplay")
-        expect(ShellUtils).to receive(:exec)
-          .with("killall pianobar")
-
         pid_mock = double
         expect(ShellUtils).to receive(:spawn)
           .with(%Q(/bin/bash -c " ffplay -nodisp <(youtube-dl -f 96  'https://www.youtube.com/watch?v=5qap5aO4i9A' -o -) 2> /dev/null"))
@@ -84,13 +80,10 @@ RSpec.describe "Full Stack" do
           .with(pid_mock)
 
         expect(@settings_mock).to receive(:worker_status=)
-          .with("stream_youtube")
+          .with("Starting...")
           .ordered
         expect(@settings_mock).to receive(:worker_status=)
-          .with("Stopped.")
-          .ordered
-        expect(@settings_mock).to receive(:worker_status=)
-          .with("Playing Lofi")
+          .with("Youtube")
           .ordered
 
         post "/stream/youtube"
@@ -110,23 +103,15 @@ RSpec.describe "Full Stack" do
         wait_thr_mock = double
         stdout_mock = double(:read_nonblock => "Select station:")
 
-        expect(ShellUtils).to receive(:exec)
-          .with("killall ffplay")
-        expect(ShellUtils).to receive(:exec)
-          .with("killall pianobar")
-
         expect(ShellUtils).to receive(:popen3)
           .with(%Q(/bin/bash -lc 'pianobar'))
           .and_return([stdin_mock, stdout_mock, stderr_mock, wait_thr_mock])
 
         expect(@settings_mock).to receive(:worker_status=)
-          .with("stream_pandora_radio")
+          .with("Starting...")
           .ordered
         expect(@settings_mock).to receive(:worker_status=)
-          .with("Stopped.")
-          .ordered
-        expect(@settings_mock).to receive(:worker_status=)
-          .with("Playing Pandora")
+          .with("Pandora")
           .ordered
 
         post "/stream/pandora_radio"
@@ -136,20 +121,34 @@ RSpec.describe "Full Stack" do
   end
 
   describe "/stream/stop" do
-    it "stops everything" do
-      expect(ShellUtils).to receive(:exec)
-        .with("killall ffplay")
-        .ordered
-      expect(ShellUtils).to receive(:exec)
-        .with("killall pianobar")
-        .ordered
+    context "when pandora is playing" do
+      it "stops pianobar using the appropriate bash command" do
+        post "/stream/pandora_radio"
+        expect(last_response.status).to eq(201)
 
-      expect(@settings_mock).to receive(:worker_status=)
-        .with("Stopped.")
-        .ordered
+        expect(ShellUtils).to receive(:exec)
+          .with("killall pianobar")
+        post "/stream/stop"
+        expect(last_response.status).to eq(201)
+      end
+    end
 
-      post "/stream/stop"
-      expect(last_response.status).to eq(201)
+    context "when youtube is playing" do
+      it "stops ffplay using the appropriate bash command" do
+        post "/stream/youtube"
+
+        expect(ShellUtils).to receive(:exec)
+          .with("killall ffplay")
+        post "/stream/stop"
+        expect(last_response.status).to eq(201)
+      end
+    end
+
+    context "when nothing is playing" do
+      it "does nothing" do
+        post "/stream/stop"
+        expect(last_response.status).to eq(201)
+      end
     end
   end
 

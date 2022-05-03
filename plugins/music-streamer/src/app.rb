@@ -11,6 +11,10 @@ require 'logger'
 require "require_all"
 require_all "app/"
 
+PULSE_SERVER = ENV["BALENA"] ? "PULSE_SERVER=tcp:localhost:4317" : ""
+puts "pulse server: #{PULSE_SERVER}"
+
+
 # TODO:
 # youtube-dl --get-thumbnail 'https://www.youtube.com/watch?v=5qap5aO4i9A'
 

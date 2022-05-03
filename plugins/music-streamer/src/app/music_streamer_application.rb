@@ -50,17 +50,17 @@ class MusicStreamerApplication < Sinatra::Base
   end
 
   post '/stream/youtube' do
-    event_machine_server.send_data({:action => "stream_youtube"}.to_json)
+    event_machine_server.send_data({:message_type => "start", :audio_stream_source_type => 'youtube'}.to_json)
     201
   end
 
   post '/stream/pandora_radio' do
-    event_machine_server.send_data({:action => "stream_pandora_radio"}.to_json)
+    event_machine_server.send_data({:message_type => "start", :audio_stream_source_type => 'pandora'}.to_json)
     201
   end
 
   post '/stream/stop' do
-    event_machine_server.send_data({:action => "stop"}.to_json)
+    event_machine_server.send_data({:message_type => "stop"}.to_json)
     201
   end
 
