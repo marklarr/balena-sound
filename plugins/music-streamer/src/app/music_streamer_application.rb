@@ -59,15 +59,20 @@ class MusicStreamerApplication < Sinatra::Base
     201
   end
 
+  post '/stream/next_track' do
+    event_machine_server.send_data({:message_type => "next_track"}.to_json)
+    201
+  end
+
   post '/stream/stop' do
     event_machine_server.send_data({:message_type => "stop"}.to_json)
     201
   end
 
   post '/pianobar_eventcmd' do
-    request_body = JSON.parse(request.body.read)
-    require 'pp'
-    pp request_body
+    request_body = request.body.read.force_encoding("utf-8")
+    event_machine_server.send_data({:message_type => "pianobar_eventcmd", :event_payload => request_body}.to_json)
+    201
   end
 
   post '/snapcast/:client_id/toggle_mute' do

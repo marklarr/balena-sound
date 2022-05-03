@@ -39,6 +39,14 @@ class MusicStreamerWorker < EM::Connection
       _update_status!("Stopping...")
       @audio_stream_source&.stop!
       _update_status!("Stopped.")
+      @audio_stream_source = nil
+    when 'next_track'
+      _update_status!("Skipping...")
+      @audio_stream_source&.next_track!
+      _update_status!("Skipped")
+    when 'pianobar_eventcmd'
+      pianobar_event = PianobarEvent.from_parsed_json(JSON.parse(message["event_payload"]))
+      _update_status!(pianobar_event.get_status)
     else
       raise "unknown message_type #{message['message_type']}"
     end

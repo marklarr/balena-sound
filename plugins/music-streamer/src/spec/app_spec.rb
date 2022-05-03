@@ -107,6 +107,8 @@ RSpec.describe "Full Stack" do
           .with(%Q(/bin/bash -lc 'pianobar'))
           .and_return([stdin_mock, stdout_mock, stderr_mock, wait_thr_mock])
 
+        expect(stdin_mock).to receive(:puts).with(26)
+
         expect(@settings_mock).to receive(:worker_status=)
           .with("Starting...")
           .ordered
@@ -117,6 +119,33 @@ RSpec.describe "Full Stack" do
         post "/stream/pandora_radio"
         expect(last_response.status).to eq(201)
       end
+    end
+  end
+
+  describe "/stream/next_track" do
+    it "sends the 'next' command to pianobar" do
+      allow(@worker_mock).to receive(:_thread) { |&block| block.call }
+
+      stdin_mock = double(:puts => nil)
+      stderr_mock = double
+      wait_thr_mock = double
+      stdout_mock = double(:read_nonblock => "Select station:")
+
+      expect(ShellUtils).to receive(:popen3)
+        .with(%Q(/bin/bash -lc 'pianobar'))
+        .and_return([stdin_mock, stdout_mock, stderr_mock, wait_thr_mock])
+
+      post "/stream/pandora_radio"
+
+      expect(@settings_mock).to receive(:worker_status=)
+        .with("Skipping...")
+        .ordered
+      expect(@settings_mock).to receive(:worker_status=)
+        .with("Skipped")
+        .ordered
+      expect(stdin_mock).to receive(:puts).with("n")
+      post "/stream/next_track"
+      expect(last_response.status).to eq(201)
     end
   end
 
@@ -147,6 +176,18 @@ RSpec.describe "Full Stack" do
     context "when nothing is playing" do
       it "does nothing" do
         post "/stream/stop"
+        expect_any_instance_of(AudioStreamSource).not_to receive(:stop!)
+        expect(last_response.status).to eq(201)
+      end
+    end
+
+    context "when already stopped" do
+      it "does nothing" do
+        post "/stream/youtube"
+        post "/stream/stop"
+
+        expect_any_instance_of(AudioStreamSource::Youtube).not_to receive(:stop!)
+        post "/stream/stop"
         expect(last_response.status).to eq(201)
       end
     end
@@ -154,11 +195,9 @@ RSpec.describe "Full Stack" do
 
   describe "/pianobar_eventcmd" do
     it "updates websockets" do
-
-    end
-
-    it "updates current status" do
-
+      expect(@settings_mock).to receive(:worker_status=)
+        .with("TOOL - Jimmy (songstart)")
+      post "pianobar_eventcmd", File.read("spec/fixtures/pianobar_eventcmd.json")
     end
   end
 
@@ -191,13 +230,6 @@ RSpec.describe "Full Stack" do
         end
       end
     end
-    # response_body_parsed = SnapcastGateway.get_status(params[:client_id])
-    #
-    # current_mute_status = response_body_parsed["result"]["client"]["config"]["volume"]["muted"]
-    # new_mute_status = !current_mute_status
-    #
-    # SnapcastGateway.set_volume_muted(params[:client_id], new_mute_status)
-    # 201
   end
 
   describe "/snapcast/:client_id/volume_up" do

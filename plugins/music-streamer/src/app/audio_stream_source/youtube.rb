@@ -31,7 +31,7 @@ class AudioStreamSource
   # end
 
     def next_track!
-      raise NotImplementedError
+      puts "WARN: youtube does not support next_track!; no-op'ing."
     end
 
     def name

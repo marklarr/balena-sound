@@ -24,7 +24,16 @@ webSocket.onmessage = function (e) {
 
 function playLofiHipHopRadio() {
   // TODO: env var
-  fetch("http://" + MUSIC_STREAMER_API_ROOT + "/play/lofi_hip_hop_radio", {
+  fetch("http://" + MUSIC_STREAMER_API_ROOT + "/stream/youtube", {
+    method:'POST',
+    mode: 'no-cors'
+  }).catch(console.error)
+  // TODO:Handle error status code
+}
+
+function nextTrack() {
+  // TODO: env var
+  fetch("http://" + MUSIC_STREAMER_API_ROOT + "/stream/next_track", {
     method:'POST',
     mode: 'no-cors'
   }).catch(console.error)
@@ -33,7 +42,7 @@ function playLofiHipHopRadio() {
 
 function playPandoraRadio() {
   // TODO: env var
-  fetch("http://" + MUSIC_STREAMER_API_ROOT + "/play/pandora_radio", {
+  fetch("http://" + MUSIC_STREAMER_API_ROOT + "/stream/pandora_radio", {
     method:'POST',
     mode: 'no-cors'
   }).catch(console.error)
@@ -42,7 +51,7 @@ function playPandoraRadio() {
 
 function stop() {
   // TODO: env var
-  fetch("http://" + MUSIC_STREAMER_API_ROOT + "/stop", {
+  fetch("http://" + MUSIC_STREAMER_API_ROOT + "/stream/stop", {
     method:'POST',
     mode: 'no-cors'
   }).catch(console.error)
@@ -56,6 +65,7 @@ function App() {
       <header className="App-header">
         <button style={{...styles.button,...{backgroundColor: '#007AFF'}}} onClick={playLofiHipHopRadio}> Play Lofi Hip-Hop Radio </button>
         <button style={{...styles.button,...{backgroundColor: '#007AFF'}}} onClick={playPandoraRadio}> Play Pandora Radio </button>
+        <button style={{...styles.button,...{backgroundColor: 'Green'}}} onClick={nextTrack}> Skip </button>
         <button style={{...styles.button,...{backgroundColor: 'red'}}}  onClick={stop}> Stop </button>
         <span id="socket-status" style={styles.socketStatusSpan}> </span>
       </header>
