@@ -13,7 +13,8 @@ group :test do
   gem "rack-test"
   gem "rspec"
   gem "pry-byebug"
-  gem "irb"
+  # Needed for runing pry locally, but breaks deployment to production...
+  # gem "irb"
   gem "rdoc"
   gem "webmock"
 end
