@@ -173,7 +173,6 @@ class Worker < EM::Connection
   end
 
   def process_message(message)
-    puts "[#{self.class}] message received: #{message}"
     _update_status!(message['action'])
     case message['action']
     when 'stream_youtube'
@@ -203,10 +202,6 @@ class Worker < EM::Connection
       _update_status!("Playing Lofi")
       ShellUtils.wait(@currently_playing_pid)
     end
-
-    def _thread
-      Thread.new(&block)
-    end
   end
 
   STATION = 26 # thumbprint radio TODO: allow as input later
@@ -226,6 +221,10 @@ class Worker < EM::Connection
       stdin.puts(STATION)
       _update_status!("Playing Pandora")
     end
+  end
+
+  def _thread
+    Thread.new(&block)
   end
 
   def _stop
@@ -250,17 +249,16 @@ class Worker < EM::Connection
   end
 end
 
-class Broker
+class EventMachineMiddleWare
   def initialize(app, options = {})
     @app = app
-    puts "B: Starting broker"
     EM::next_tick do
-      @server = EM::connect('127.0.0.1', 4000, Worker, self)
+      @event_machine_server = EM::connect('127.0.0.1', 4000, Worker, self)
     end
   end
 
   def call(env)
-    env['broker'] = @server
+    env['event_machine_server'] = @event_machine_server
     @app.call(env)
   end
 
@@ -268,7 +266,7 @@ end
 
 class MusicStreamerApplication < Sinatra::Base
   use Rack::CommonLogger
-  use Broker
+  use EventMachineMiddleWare
 
   set server: 'thin'
 
@@ -293,7 +291,7 @@ class MusicStreamerApplication < Sinatra::Base
   end
 
   helpers do
-    def broker; env['broker']; end
+    def event_machine_server; env['event_machine_server']; end
   end
 
 
@@ -315,17 +313,17 @@ class MusicStreamerApplication < Sinatra::Base
   end
 
   post '/stream/youtube' do
-    broker.send_data({:action => "stream_youtube"}.to_json)
+    event_machine_server.send_data({:action => "stream_youtube"}.to_json)
     201
   end
 
   post '/stream/pandora_radio' do
-    broker.send_data({:action => "stream_pandora_radio"}.to_json)
+    event_machine_server.send_data({:action => "stream_pandora_radio"}.to_json)
     201
   end
 
   post '/stream/stop' do
-    broker.send_data({:action => "stop"}.to_json)
+    event_machine_server.send_data({:action => "stop"}.to_json)
     201
   end
 

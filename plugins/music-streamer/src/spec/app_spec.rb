@@ -9,6 +9,10 @@ require "webmock/rspec"
 RSpec.describe "Full Stack" do
   include Rack::Test::Methods
 
+  before(:all) do
+    @event_machine_server_mock = Object.new
+  end
+
   before(:each) do
     allow(ShellUtils).to receive(:exec)
     allow(ShellUtils).to receive(:popen3)
@@ -17,11 +21,15 @@ RSpec.describe "Full Stack" do
     @settings_mock = double(:sockets => [], :worker_status= => "")
     @app_mock = double(:settings => @settings_mock)
     @worker_mock = Worker.new("sig", @app_mock)
-    @broker_mock = double
-    allow(@broker_mock).to receive(:send_data) { |*args| @worker_mock.receive_data(*args) }
+
     allow(EventMachine).to receive(:start_server)
     allow(EM).to receive(:next_tick) { |&block| block.call }
-    allow(EM).to receive(:connect).and_return(@broker_mock)
+    allow(EM).to receive(:connect).and_return(@event_machine_server_mock)
+    allow(@event_machine_server_mock).to receive(:send_data) { |*args| @worker_mock.receive_data(*args) }
+  end
+
+  after(:each) do
+    WebMock.reset!
   end
 
   def app
@@ -58,23 +66,18 @@ RSpec.describe "Full Stack" do
   end
 
   describe "/stream/youtube" do
-    # broker.send_data({:action => "lofi_hip_hop_radio"}.to_json)
-    # 201
-    #
     describe "full stack" do
       it "streams the youtube channel using the appropriate bash command" do
-        pid_mock = double
+        allow(@worker_mock).to receive(:_thread) { |&block| block.call }
 
         expect(ShellUtils).to receive(:exec)
           .with("killall ffplay")
-          .ordered
         expect(ShellUtils).to receive(:exec)
           .with("killall pianobar")
-          .ordered
 
+        pid_mock = double
         expect(ShellUtils).to receive(:spawn)
           .with(%Q(/bin/bash -c " ffplay -nodisp <(youtube-dl -f 96  'https://www.youtube.com/watch?v=5qap5aO4i9A' -o -) 2> /dev/null"))
-          .ordered
           .and_return(pid_mock)
 
         expect(ShellUtils).to receive(:wait)
@@ -109,10 +112,8 @@ RSpec.describe "Full Stack" do
 
         expect(ShellUtils).to receive(:exec)
           .with("killall ffplay")
-          .ordered
         expect(ShellUtils).to receive(:exec)
           .with("killall pianobar")
-          .ordered
 
         expect(ShellUtils).to receive(:popen3)
           .with(%Q(/bin/bash -lc 'pianobar'))
