@@ -11,6 +11,7 @@ RUN chmod a+rx /usr/local/bin/youtube-dl
 ADD src /usr/src/
 COPY start.sh /usr/src/
 COPY libao.conf /etc/libao.conf
+COPY pianobar_eventcmd.rb /usr/src/
 
 RUN mkdir -p /root/.config/pianobar
 RUN cp /run/secrets/pianobar-config /root/.config/pianobar/config
