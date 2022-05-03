@@ -20,7 +20,7 @@ RSpec.describe "Full Stack" do
 
     @settings_mock = double(:sockets => [], :worker_status= => "")
     @app_mock = double(:settings => @settings_mock)
-    @worker_mock = Worker.new("sig", @app_mock)
+    @worker_mock = MusicStreamerWorker.new("sig", @app_mock)
 
     allow(EventMachine).to receive(:start_server)
     allow(EM).to receive(:next_tick) { |&block| block.call }
