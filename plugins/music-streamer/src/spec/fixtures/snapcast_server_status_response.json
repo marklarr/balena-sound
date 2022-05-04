@@ -1,0 +1,608 @@
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": {
+    "server": {
+      "groups": [
+        {
+          "clients": [
+            {
+              "config": {
+                "instance": 1,
+                "latency": 0,
+                "name": "Living Room",
+                "volume": {
+                  "muted": true,
+                  "percent": 15
+                }
+              },
+              "connected": true,
+              "host": {
+                "arch": "armv7l",
+                "ip": "192.168.0.32",
+                "mac": "02:42:ac:11:00:03",
+                "name": "65247c9420aa",
+                "os": "Alpine Linux v3.13"
+              },
+              "id": "dac6cee9503ac49b82055d6714d62c9b",
+              "lastSeen": {
+                "sec": 1651699436,
+                "usec": 97982
+              },
+              "snapclient": {
+                "name": "Snapclient",
+                "protocolVersion": 2,
+                "version": "0.25.0"
+              }
+            }
+          ],
+          "id": "7d6a7d96-8b6f-2132-1ac8-40768d4eb492",
+          "muted": false,
+          "name": "",
+          "stream_id": "balenaSound"
+        },
+        {
+          "clients": [
+            {
+              "config": {
+                "instance": 1,
+                "latency": 0,
+                "name": "Office",
+                "volume": {
+                  "muted": false,
+                  "percent": 51
+                }
+              },
+              "connected": true,
+              "host": {
+                "arch": "armv7l",
+                "ip": "192.168.0.28",
+                "mac": "02:42:ac:11:00:03",
+                "name": "ef20ffb3d238",
+                "os": "Alpine Linux v3.13"
+              },
+              "id": "75b73637db7aad2e34231cf3f0bbb4a6",
+              "lastSeen": {
+                "sec": 1651699435,
+                "usec": 845890
+              },
+              "snapclient": {
+                "name": "Snapclient",
+                "protocolVersion": 2,
+                "version": "0.25.0"
+              }
+            }
+          ],
+          "id": "b8b9735c-6909-f302-05c5-cb780da75997",
+          "muted": false,
+          "name": "",
+          "stream_id": "balenaSound"
+        },
+        {
+          "clients": [
+            {
+              "config": {
+                "instance": 1,
+                "latency": 0,
+                "name": "Kitchen",
+                "volume": {
+                  "muted": false,
+                  "percent": 16
+                }
+              },
+              "connected": false,
+              "host": {
+                "arch": "armv7l",
+                "ip": "192.168.0.26",
+                "mac": "02:42:ac:11:00:02",
+                "name": "6d2f5bccf53d",
+                "os": "Alpine Linux v3.13"
+              },
+              "id": "Pi-Sound-Server",
+              "lastSeen": {
+                "sec": 1651621360,
+                "usec": 223882
+              },
+              "snapclient": {
+                "name": "Snapclient",
+                "protocolVersion": 2,
+                "version": "0.25.0"
+              }
+            }
+          ],
+          "id": "a7a97bfe-50cc-91e9-b33c-d02702588ab0",
+          "muted": false,
+          "name": "",
+          "stream_id": "balenaSound"
+        },
+        {
+          "clients": [
+            {
+              "config": {
+                "instance": 1,
+                "latency": 0,
+                "name": "",
+                "volume": {
+                  "muted": false,
+                  "percent": 100
+                }
+              },
+              "connected": false,
+              "host": {
+                "arch": "web",
+                "ip": "192.168.100.125",
+                "mac": "00:00:00:00:00:00",
+                "name": "Snapweb client",
+                "os": "iPhone"
+              },
+              "id": "972da58f-f008-48f7-82ad-efd1e40068b3",
+              "lastSeen": {
+                "sec": 1636591234,
+                "usec": 280976
+              },
+              "snapclient": {
+                "name": "Snapweb",
+                "protocolVersion": 2,
+                "version": "0.1.0"
+              }
+            }
+          ],
+          "id": "eb71bef1-f3a8-56e8-33fd-9920a18a9cc5",
+          "muted": false,
+          "name": "",
+          "stream_id": "balenaSound"
+        },
+        {
+          "clients": [
+            {
+              "config": {
+                "instance": 1,
+                "latency": 0,
+                "name": "",
+                "volume": {
+                  "muted": false,
+                  "percent": 100
+                }
+              },
+              "connected": false,
+              "host": {
+                "arch": "web",
+                "ip": "192.168.100.125",
+                "mac": "00:00:00:00:00:00",
+                "name": "Snapweb client",
+                "os": "iPhone"
+              },
+              "id": "f1d8c3ec-d53b-40e6-8383-a447fd905017",
+              "lastSeen": {
+                "sec": 1636600860,
+                "usec": 176252
+              },
+              "snapclient": {
+                "name": "Snapweb",
+                "protocolVersion": 2,
+                "version": "0.1.0"
+              }
+            }
+          ],
+          "id": "0d7d7fd0-3c8e-1f65-9507-440e5e5a26e6",
+          "muted": false,
+          "name": "",
+          "stream_id": "balenaSound"
+        },
+        {
+          "clients": [
+            {
+              "config": {
+                "instance": 1,
+                "latency": 0,
+                "name": "",
+                "volume": {
+                  "muted": false,
+                  "percent": 100
+                }
+              },
+              "connected": false,
+              "host": {
+                "arch": "web",
+                "ip": "192.168.0.19",
+                "mac": "00:00:00:00:00:00",
+                "name": "Snapweb client",
+                "os": "Linux x86_64"
+              },
+              "id": "428880aa-f9d2-4537-b5d9-4f4f7817a43a",
+              "lastSeen": {
+                "sec": 1636813363,
+                "usec": 606183
+              },
+              "snapclient": {
+                "name": "Snapweb",
+                "protocolVersion": 2,
+                "version": "0.1.0"
+              }
+            }
+          ],
+          "id": "5d069008-7516-2a90-a943-376be3e38982",
+          "muted": false,
+          "name": "",
+          "stream_id": "balenaSound"
+        },
+        {
+          "clients": [
+            {
+              "config": {
+                "instance": 1,
+                "latency": 0,
+                "name": "",
+                "volume": {
+                  "muted": false,
+                  "percent": 100
+                }
+              },
+              "connected": false,
+              "host": {
+                "arch": "web",
+                "ip": "192.168.100.119",
+                "mac": "00:00:00:00:00:00",
+                "name": "Snapweb client",
+                "os": "Linux aarch64"
+              },
+              "id": "45f47427-17de-4112-9533-d7aa35564385",
+              "lastSeen": {
+                "sec": 1636680253,
+                "usec": 257830
+              },
+              "snapclient": {
+                "name": "Snapweb",
+                "protocolVersion": 2,
+                "version": "0.1.0"
+              }
+            }
+          ],
+          "id": "ef5f18a9-21a7-b023-4663-eea03c3545cc",
+          "muted": false,
+          "name": "",
+          "stream_id": "balenaSound"
+        },
+        {
+          "clients": [
+            {
+              "config": {
+                "instance": 1,
+                "latency": 0,
+                "name": "",
+                "volume": {
+                  "muted": false,
+                  "percent": 100
+                }
+              },
+              "connected": false,
+              "host": {
+                "arch": "web",
+                "ip": "192.168.0.36",
+                "mac": "00:00:00:00:00:00",
+                "name": "Snapweb client",
+                "os": "iPhone"
+              },
+              "id": "581015de-b0a8-4583-989b-d52ce2c2877a",
+              "lastSeen": {
+                "sec": 1650524514,
+                "usec": 919404
+              },
+              "snapclient": {
+                "name": "Snapweb",
+                "protocolVersion": 2,
+                "version": "0.4.0"
+              }
+            }
+          ],
+          "id": "500ebc9a-bc4b-69a3-8988-749065ceb03e",
+          "muted": false,
+          "name": "",
+          "stream_id": "balenaSound"
+        },
+        {
+          "clients": [
+            {
+              "config": {
+                "instance": 1,
+                "latency": 0,
+                "name": "",
+                "volume": {
+                  "muted": false,
+                  "percent": 100
+                }
+              },
+              "connected": false,
+              "host": {
+                "arch": "web",
+                "ip": "192.168.0.36",
+                "mac": "00:00:00:00:00:00",
+                "name": "Snapweb client",
+                "os": "iPhone"
+              },
+              "id": "03aa98c5-40a2-480c-b6b7-07eceb7a33fc",
+              "lastSeen": {
+                "sec": 1650524530,
+                "usec": 451370
+              },
+              "snapclient": {
+                "name": "Snapweb",
+                "protocolVersion": 2,
+                "version": "0.4.0"
+              }
+            }
+          ],
+          "id": "a620fee4-c03c-80ef-48a4-2a0e1c9a2095",
+          "muted": false,
+          "name": "",
+          "stream_id": "balenaSound"
+        },
+        {
+          "clients": [
+            {
+              "config": {
+                "instance": 1,
+                "latency": 0,
+                "name": "",
+                "volume": {
+                  "muted": false,
+                  "percent": 100
+                }
+              },
+              "connected": false,
+              "host": {
+                "arch": "web",
+                "ip": "192.168.0.36",
+                "mac": "00:00:00:00:00:00",
+                "name": "Snapweb client",
+                "os": "iPhone"
+              },
+              "id": "493252b9-f7e0-41d8-a9ae-a50256877f2c",
+              "lastSeen": {
+                "sec": 1650556725,
+                "usec": 61307
+              },
+              "snapclient": {
+                "name": "Snapweb",
+                "protocolVersion": 2,
+                "version": "0.4.0"
+              }
+            }
+          ],
+          "id": "0331894e-3139-f9a9-ee45-360fd367b119",
+          "muted": false,
+          "name": "",
+          "stream_id": "balenaSound"
+        },
+        {
+          "clients": [
+            {
+              "config": {
+                "instance": 1,
+                "latency": 0,
+                "name": "",
+                "volume": {
+                  "muted": false,
+                  "percent": 100
+                }
+              },
+              "connected": false,
+              "host": {
+                "arch": "web",
+                "ip": "192.168.0.23",
+                "mac": "00:00:00:00:00:00",
+                "name": "Snapweb client",
+                "os": "Linux aarch64"
+              },
+              "id": "19e8d847-16ad-4de0-8bf0-24f083a153d4",
+              "lastSeen": {
+                "sec": 1651037189,
+                "usec": 927794
+              },
+              "snapclient": {
+                "name": "Snapweb",
+                "protocolVersion": 2,
+                "version": "0.4.0"
+              }
+            }
+          ],
+          "id": "663d3438-1a68-037d-0d8e-9d2bec3bf130",
+          "muted": false,
+          "name": "",
+          "stream_id": "balenaSound"
+        },
+        {
+          "clients": [
+            {
+              "config": {
+                "instance": 1,
+                "latency": 0,
+                "name": "",
+                "volume": {
+                  "muted": false,
+                  "percent": 48
+                }
+              },
+              "connected": false,
+              "host": {
+                "arch": "web",
+                "ip": "192.168.0.36",
+                "mac": "00:00:00:00:00:00",
+                "name": "Snapweb client",
+                "os": "iPhone"
+              },
+              "id": "6b58ac4e-dd42-4df4-a21e-5fda4b40e598",
+              "lastSeen": {
+                "sec": 1651037264,
+                "usec": 933879
+              },
+              "snapclient": {
+                "name": "Snapweb",
+                "protocolVersion": 2,
+                "version": "0.4.0"
+              }
+            }
+          ],
+          "id": "61cafba6-be0a-d321-3503-6fbcde7ca933",
+          "muted": false,
+          "name": "",
+          "stream_id": "balenaSound"
+        },
+        {
+          "clients": [
+            {
+              "config": {
+                "instance": 1,
+                "latency": 0,
+                "name": "",
+                "volume": {
+                  "muted": false,
+                  "percent": 21
+                }
+              },
+              "connected": false,
+              "host": {
+                "arch": "web",
+                "ip": "192.168.0.36",
+                "mac": "00:00:00:00:00:00",
+                "name": "Snapweb client",
+                "os": "iPhone"
+              },
+              "id": "88f155f3-26c1-4ce5-94a6-98749d124a17",
+              "lastSeen": {
+                "sec": 1651037354,
+                "usec": 368467
+              },
+              "snapclient": {
+                "name": "Snapweb",
+                "protocolVersion": 2,
+                "version": "0.4.0"
+              }
+            }
+          ],
+          "id": "d8e264cd-b201-bade-8b75-da6482dd133b",
+          "muted": false,
+          "name": "",
+          "stream_id": "balenaSound"
+        },
+        {
+          "clients": [
+            {
+              "config": {
+                "instance": 1,
+                "latency": 0,
+                "name": "",
+                "volume": {
+                  "muted": false,
+                  "percent": 77
+                }
+              },
+              "connected": false,
+              "host": {
+                "arch": "web",
+                "ip": "192.168.0.36",
+                "mac": "00:00:00:00:00:00",
+                "name": "Snapweb client",
+                "os": "iPhone"
+              },
+              "id": "7badc441-5a38-410f-9a45-3b2822c3470d",
+              "lastSeen": {
+                "sec": 1651037462,
+                "usec": 746584
+              },
+              "snapclient": {
+                "name": "Snapweb",
+                "protocolVersion": 2,
+                "version": "0.4.0"
+              }
+            }
+          ],
+          "id": "37ae4c87-c8cc-6078-5cc6-252cb4e64d79",
+          "muted": false,
+          "name": "",
+          "stream_id": "balenaSound"
+        },
+        {
+          "clients": [
+            {
+              "config": {
+                "instance": 1,
+                "latency": 0,
+                "name": "Kitchen",
+                "volume": {
+                  "muted": false,
+                  "percent": 35
+                }
+              },
+              "connected": true,
+              "host": {
+                "arch": "armv7l",
+                "ip": "192.168.0.26",
+                "mac": "02:42:ac:11:00:03",
+                "name": "adcc2c31a1de",
+                "os": "Alpine Linux v3.13"
+              },
+              "id": "ba6e0fc699945fa7dc028733455dfb88",
+              "lastSeen": {
+                "sec": 1651699436,
+                "usec": 141760
+              },
+              "snapclient": {
+                "name": "Snapclient",
+                "protocolVersion": 2,
+                "version": "0.25.0"
+              }
+            }
+          ],
+          "id": "174f6e50-b800-9916-ec02-1d2610a77aa2",
+          "muted": false,
+          "name": "",
+          "stream_id": "balenaSound"
+        }
+      ],
+      "server": {
+        "host": {
+          "arch": "aarch64",
+          "ip": "",
+          "mac": "",
+          "name": "575c4090e5f6",
+          "os": "Alpine Linux v3.14"
+        },
+        "snapserver": {
+          "controlProtocolVersion": 1,
+          "name": "Snapserver",
+          "protocolVersion": 1,
+          "version": "0.26.0"
+        }
+      },
+      "streams": [
+        {
+          "id": "balenaSound",
+          "properties": {
+            "canControl": false,
+            "canGoNext": false,
+            "canGoPrevious": false,
+            "canPause": false,
+            "canPlay": false,
+            "canSeek": false
+          },
+          "status": "idle",
+          "uri": {
+            "fragment": "",
+            "host": "",
+            "path": "",
+            "query": {
+              "chunk_ms": "20",
+              "codec": "flac",
+              "device": "pulse",
+              "name": "balenaSound",
+              "sampleformat": "44100:16:2"
+            },
+            "raw": "alsa:///?chunk_ms=20&codec=flac&device=pulse&name=balenaSound&sampleformat=44100:16:2",
+            "scheme": "alsa"
+          }
+        }
+      ]
+    }
+  }
+}

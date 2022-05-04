@@ -21,8 +21,10 @@ class MusicStreamerApplication < Sinatra::Base
     set :show_exceptions, false
   end
 
+  SNAPCAST_SERVER_IP_BY_CLIENT_NAME_CACHE = {}
 
   def initialize(*args)
+    _cache_snapcast_server_ips!
     EventMachine::start_server '127.0.0.1', '4000', MusicStreamerWorker, self
     super
   end
@@ -84,12 +86,11 @@ class MusicStreamerApplication < Sinatra::Base
     response_body_parsed = SnapcastJsonRpcGateway.get_status(params[:client_id])
 
     current_mute_status = response_body_parsed["result"]["client"]["config"]["volume"]["muted"]
-    ip = response_body_parsed["result"]["client"]["host"]["ip"]
     new_mute_status = !current_mute_status
 
     SoundEffects.play_sound_effect(
       new_mute_status ? SoundEffects::EffectName::PAUSE : SoundEffects::EffectName::PLAY,
-      "tcp:#{ip}:4317",
+      "tcp:#{_cached_snapcast_server_ip(params[:client_id])}:4317",
       50
     )
     SnapcastJsonRpcGateway.set_volume_muted(params[:client_id], new_mute_status)
@@ -97,20 +98,17 @@ class MusicStreamerApplication < Sinatra::Base
   end
 
   post '/snapcast/:client_id/volume_up' do
+    SoundEffects.play_sound_effect(
+      SoundEffects::EffectName::VOLUME_CHANGE,
+      "tcp:#{_cached_snapcast_server_ip(params[:client_id])}:4317",
+      50
+    )
+
     response_body_parsed = SnapcastJsonRpcGateway.get_status(params[:client_id])
 
     current_volume = response_body_parsed["result"]["client"]["config"]["volume"]["percent"]
     new_volume = [current_volume + 5, MAX_VOLUME].min
     if new_volume != current_volume
-      ip = response_body_parsed["result"]["client"]["host"]["ip"]
-
-
-      SoundEffects.play_sound_effect(
-        SoundEffects::EffectName::VOLUME_CHANGE,
-        "tcp:#{ip}:4317",
-        new_volume
-      )
-
       SnapcastJsonRpcGateway.set_volume_percent(params[:client_id], new_volume)
 
     end
@@ -118,22 +116,37 @@ class MusicStreamerApplication < Sinatra::Base
   end
 
   post '/snapcast/:client_id/volume_down' do
+      SoundEffects.play_sound_effect(
+        SoundEffects::EffectName::VOLUME_CHANGE,
+        "tcp:#{_cached_snapcast_server_ip(params[:client_id])}:4317",
+        50
+      )
+
     response_body_parsed = SnapcastJsonRpcGateway.get_status(params[:client_id])
 
     current_volume = response_body_parsed["result"]["client"]["config"]["volume"]["percent"]
     new_volume = [current_volume - 5, MIN_VOLUME].max
     if new_volume != current_volume
-      ip = response_body_parsed["result"]["client"]["host"]["ip"]
-
-      SoundEffects.play_sound_effect(
-        SoundEffects::EffectName::VOLUME_CHANGE,
-        "tcp:#{ip}:4317",
-        50
-      )
-
       SnapcastJsonRpcGateway.set_volume_percent(params[:client_id], new_volume)
     end
     201
+  end
+
+  def _cached_snapcast_server_ip(client_id)
+    if SNAPCAST_SERVER_IP_BY_CLIENT_NAME_CACHE.has_key?(client_id)
+      SNAPCAST_SERVER_IP_BY_CLIENT_NAME_CACHE[client_id]
+    else
+      raise "No server ip cached for client_id: #{client_id}"
+    end
+  end
+
+  def _cache_snapcast_server_ips!
+    response_body_parsed = SnapcastJsonRpcGateway.get_server_status
+    response_body_parsed["result"]["server"]["groups"].each do |group|
+      group["clients"].each do |client|
+        SNAPCAST_SERVER_IP_BY_CLIENT_NAME_CACHE[client["id"]] = client["host"]["ip"]
+      end
+    end
   end
 end
 

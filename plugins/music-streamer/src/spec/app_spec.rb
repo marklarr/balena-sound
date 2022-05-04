@@ -21,6 +21,10 @@ RSpec.describe "Full Stack" do
     allow(ShellUtils).to receive(:wait)
     allow(SoundEffects).to receive(:_thread) { |&block| block.call }
 
+    stub_request(:post, "192.168.0.23:1780/jsonrpc")
+      .with(:body => %Q({"id":1,"jsonrpc":"2.0","method":"Server.GetStatus"}))
+      .to_return(:body => File.read("spec/fixtures/snapcast_server_status_response.json"))
+
     @settings_mock = double(:sockets => [], :worker_status= => "")
     @app_mock = double(:settings => @settings_mock)
     @worker_mock = MusicStreamerWorker.new("sig", @app_mock)
@@ -219,23 +223,20 @@ RSpec.describe "Full Stack" do
                     :percent => 50,
                   }
                 },
-                :host => {
-                  :ip => "192.168.0.1337"
-                }
               }
             }
           }
           stub_request(:post, "192.168.0.23:1780/jsonrpc")
-            .with(:body => %Q({"id":8,"jsonrpc":"2.0","method":"Client.GetStatus","params":{"id":"foo-bar-baz-id"}}))
+            .with(:body => %Q({"id":8,"jsonrpc":"2.0","method":"Client.GetStatus","params":{"id":"ba6e0fc699945fa7dc028733455dfb88"}}))
             .to_return(:body => snapcast_get_status_response.to_json)
 
 
           stub_request(:post, "192.168.0.23:1780/jsonrpc")
-            .with(:body => %Q({"id":"8","jsonrpc":"2.0","method":"Client.SetVolume","params":{"id":"foo-bar-baz-id","volume":{"muted":#{!current_mute_status}}}}))
+            .with(:body => %Q({"id":"8","jsonrpc":"2.0","method":"Client.SetVolume","params":{"id":"ba6e0fc699945fa7dc028733455dfb88","volume":{"muted":#{!current_mute_status}}}}))
             .to_return(:body => "{}")
 
-          expect(ShellUtils).to receive(:exec).with(%Q(/bin/bash -c "PULSE_SERVER=tcp:192.168.0.1337:4317 ffplay -volume 50 -autoexit -nodisp assets/jambox_#{current_mute_status ? "on" : "off"}.mp3 2> /dev/null"))
-          post "/snapcast/foo-bar-baz-id/toggle_mute"
+          expect(ShellUtils).to receive(:exec).with(%Q(/bin/bash -c "PULSE_SERVER=tcp:192.168.0.26:4317 ffplay -volume 50 -autoexit -nodisp assets/jambox_#{current_mute_status ? "on" : "off"}.mp3 2> /dev/null"))
+          post "/snapcast/ba6e0fc699945fa7dc028733455dfb88/toggle_mute"
         end
       end
     end
@@ -251,23 +252,20 @@ RSpec.describe "Full Stack" do
                 :percent => 70
               }
             },
-            :host => {
-              :ip => "192.168.0.1337"
-            }
           }
         }
       }
       stub_request(:post, "192.168.0.23:1780/jsonrpc")
-        .with(:body => %Q({"id":8,"jsonrpc":"2.0","method":"Client.GetStatus","params":{"id":"foo-bar-baz-id"}}))
+        .with(:body => %Q({"id":8,"jsonrpc":"2.0","method":"Client.GetStatus","params":{"id":"ba6e0fc699945fa7dc028733455dfb88"}}))
         .to_return(:body => snapcast_get_status_response.to_json)
 
 
       stub_request(:post, "192.168.0.23:1780/jsonrpc")
-        .with(:body => %Q({"id":"8","jsonrpc":"2.0","method":"Client.SetVolume","params":{"id":"foo-bar-baz-id","volume":{"muted":false, "percent":75}}}))
+        .with(:body => %Q({"id":"8","jsonrpc":"2.0","method":"Client.SetVolume","params":{"id":"ba6e0fc699945fa7dc028733455dfb88","volume":{"muted":false, "percent":75}}}))
         .to_return(:body => "{}")
 
-      expect(ShellUtils).to receive(:exec).with(%Q(/bin/bash -c "PULSE_SERVER=tcp:192.168.0.1337:4317 ffplay -volume 75 -autoexit -nodisp assets/jambox_volume_change.mp3 2> /dev/null"))
-      post "/snapcast/foo-bar-baz-id/volume_up"
+      expect(ShellUtils).to receive(:exec).with(%Q(/bin/bash -c "PULSE_SERVER=tcp:192.168.0.26:4317 ffplay -volume 50 -autoexit -nodisp assets/jambox_volume_change.mp3 2> /dev/null"))
+      post "/snapcast/ba6e0fc699945fa7dc028733455dfb88/volume_up"
     end
 
     it "does not exceed 100%" do
@@ -279,17 +277,14 @@ RSpec.describe "Full Stack" do
                 :percent => 100
               }
             },
-            :host => {
-              :ip => "192.168.0.1337"
-            }
           }
         }
       }
       stub_request(:post, "192.168.0.23:1780/jsonrpc")
-        .with(:body => %Q({"id":8,"jsonrpc":"2.0","method":"Client.GetStatus","params":{"id":"foo-bar-baz-id"}}))
+        .with(:body => %Q({"id":8,"jsonrpc":"2.0","method":"Client.GetStatus","params":{"id":"ba6e0fc699945fa7dc028733455dfb88"}}))
         .to_return(:body => snapcast_get_status_response.to_json)
 
-      post "/snapcast/foo-bar-baz-id/volume_up"
+      post "/snapcast/ba6e0fc699945fa7dc028733455dfb88/volume_up"
     end
   end
 
@@ -303,23 +298,20 @@ RSpec.describe "Full Stack" do
                 :percent => 70
               }
             },
-            :host => {
-              :ip => "192.168.0.1337"
-            }
           }
         }
       }
       stub_request(:post, "192.168.0.23:1780/jsonrpc")
-        .with(:body => %Q({"id":8,"jsonrpc":"2.0","method":"Client.GetStatus","params":{"id":"foo-bar-baz-id"}}))
+        .with(:body => %Q({"id":8,"jsonrpc":"2.0","method":"Client.GetStatus","params":{"id":"ba6e0fc699945fa7dc028733455dfb88"}}))
         .to_return(:body => snapcast_get_status_response.to_json)
 
 
       stub_request(:post, "192.168.0.23:1780/jsonrpc")
-        .with(:body => %Q({"id":"8","jsonrpc":"2.0","method":"Client.SetVolume","params":{"id":"foo-bar-baz-id","volume":{"muted":false, "percent":65}}}))
+        .with(:body => %Q({"id":"8","jsonrpc":"2.0","method":"Client.SetVolume","params":{"id":"ba6e0fc699945fa7dc028733455dfb88","volume":{"muted":false, "percent":65}}}))
         .to_return(:body => "{}")
 
-      expect(ShellUtils).to receive(:exec).with(%Q(/bin/bash -c "PULSE_SERVER=tcp:192.168.0.1337:4317 ffplay -volume 50 -autoexit -nodisp assets/jambox_volume_change.mp3 2> /dev/null"))
-      post "/snapcast/foo-bar-baz-id/volume_down"
+      expect(ShellUtils).to receive(:exec).with(%Q(/bin/bash -c "PULSE_SERVER=tcp:192.168.0.26:4317 ffplay -volume 50 -autoexit -nodisp assets/jambox_volume_change.mp3 2> /dev/null"))
+      post "/snapcast/ba6e0fc699945fa7dc028733455dfb88/volume_down"
     end
 
     it "does not go under 0%" do
@@ -331,22 +323,19 @@ RSpec.describe "Full Stack" do
                 :percent => 0
               }
             },
-            :host => {
-              :ip => "192.168.0.1337"
-            }
           }
         }
       }
       stub_request(:post, "192.168.0.23:1780/jsonrpc")
-        .with(:body => %Q({"id":8,"jsonrpc":"2.0","method":"Client.GetStatus","params":{"id":"foo-bar-baz-id"}}))
+        .with(:body => %Q({"id":8,"jsonrpc":"2.0","method":"Client.GetStatus","params":{"id":"ba6e0fc699945fa7dc028733455dfb88"}}))
         .to_return(:body => snapcast_get_status_response.to_json)
 
 
       stub_request(:post, "192.168.0.23:1780/jsonrpc")
-        .with(:body => %Q({"id":"8","jsonrpc":"2.0","method":"Client.SetVolume","params":{"id":"foo-bar-baz-id","volume":{"muted":false, "percent":0}}}))
+        .with(:body => %Q({"id":"8","jsonrpc":"2.0","method":"Client.SetVolume","params":{"id":"ba6e0fc699945fa7dc028733455dfb88","volume":{"muted":false, "percent":0}}}))
         .to_return(:body => "{}")
 
-      post "/snapcast/foo-bar-baz-id/volume_down"
+      post "/snapcast/ba6e0fc699945fa7dc028733455dfb88/volume_down"
     end
   end
 end
