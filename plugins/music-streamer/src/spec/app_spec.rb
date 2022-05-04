@@ -3,7 +3,8 @@ ENV["APP_ENV"] = "test"
 require_relative "../app"
 require "rspec"
 require "rack/test"
-require "pry-byebug"
+# Only uncomment when uncommenting require "irb" line in Gemfile
+# require "pry-byebug"
 require "webmock/rspec"
 
 RSpec.describe "Full Stack" do
@@ -144,6 +145,8 @@ RSpec.describe "Full Stack" do
         .with("Skipped")
         .ordered
       expect(stdin_mock).to receive(:puts).with("n")
+
+      expect(ShellUtils).to receive(:exec).with(%Q(/bin/bash -c "PULSE_SERVER=tcp:localhost:4317 ffplay -nodisp assets/jambox_on.mp3))
       post "/stream/next_track"
       expect(last_response.status).to eq(201)
     end
@@ -213,6 +216,9 @@ RSpec.describe "Full Stack" do
                   :volume => {
                     :muted => current_mute_status
                   }
+                },
+                :host => {
+                  :ip => "192.168.0.1337"
                 }
               }
             }
@@ -226,6 +232,7 @@ RSpec.describe "Full Stack" do
             .with(:body => %Q({"id":"8","jsonrpc":"2.0","method":"Client.SetVolume","params":{"id":"foo-bar-baz-id","volume":{"muted":#{!current_mute_status}}}}))
             .to_return(:body => "{}")
 
+          expect(ShellUtils).to receive(:exec).with(%Q(/bin/bash -c "PULSE_SERVER=tcp:192.168.0.1337:4317 ffplay -nodisp assets/jambox_#{current_mute_status ? "on" : "off"}.mp3))
           post "/snapcast/foo-bar-baz-id/toggle_mute"
         end
       end
@@ -241,6 +248,9 @@ RSpec.describe "Full Stack" do
               :volume => {
                 :percent => 70
               }
+            },
+            :host => {
+              :ip => "192.168.0.1337"
             }
           }
         }
@@ -254,6 +264,7 @@ RSpec.describe "Full Stack" do
         .with(:body => %Q({"id":"8","jsonrpc":"2.0","method":"Client.SetVolume","params":{"id":"foo-bar-baz-id","volume":{"muted":false, "percent":75}}}))
         .to_return(:body => "{}")
 
+      expect(ShellUtils).to receive(:exec).with(%Q(/bin/bash -c "PULSE_SERVER=tcp:192.168.0.1337:4317 ffplay -nodisp assets/jambox_volume_change.mp3))
       post "/snapcast/foo-bar-baz-id/volume_up"
     end
 
@@ -265,6 +276,9 @@ RSpec.describe "Full Stack" do
               :volume => {
                 :percent => 100
               }
+            },
+            :host => {
+              :ip => "192.168.0.1337"
             }
           }
         }
@@ -278,6 +292,7 @@ RSpec.describe "Full Stack" do
         .with(:body => %Q({"id":"8","jsonrpc":"2.0","method":"Client.SetVolume","params":{"id":"foo-bar-baz-id","volume":{"muted":false, "percent":100}}}))
         .to_return(:body => "{}")
 
+      expect(ShellUtils).to receive(:exec).with(%Q(/bin/bash -c "PULSE_SERVER=tcp:192.168.0.1337:4317 ffplay -nodisp assets/jambox_volume_change.mp3))
       post "/snapcast/foo-bar-baz-id/volume_up"
     end
   end
@@ -291,6 +306,9 @@ RSpec.describe "Full Stack" do
               :volume => {
                 :percent => 70
               }
+            },
+            :host => {
+              :ip => "192.168.0.1337"
             }
           }
         }
@@ -315,6 +333,9 @@ RSpec.describe "Full Stack" do
               :volume => {
                 :percent => 0
               }
+            },
+            :host => {
+              :ip => "192.168.0.1337"
             }
           }
         }
