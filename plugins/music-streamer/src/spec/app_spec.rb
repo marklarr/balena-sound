@@ -147,7 +147,7 @@ RSpec.describe "Full Stack" do
         .ordered
       expect(stdin_mock).to receive(:puts).with("n")
 
-      expect(ShellUtils).to receive(:exec).with(%Q(/bin/bash -c "PULSE_SERVER=tcp:localhost:4317 ffplay -autoexit -nodisp assets/jambox_on.mp3"))
+      expect(ShellUtils).to receive(:exec).with(%Q(/bin/bash -c "PULSE_SERVER=tcp:localhost:4317 ffplay -volume 100 -autoexit -nodisp assets/jambox_on.mp3 2> /dev/null"))
       post "/stream/next_track"
       expect(last_response.status).to eq(201)
     end
@@ -215,7 +215,8 @@ RSpec.describe "Full Stack" do
               :client => {
                 :config => {
                   :volume => {
-                    :muted => current_mute_status
+                    :muted => current_mute_status,
+                    :percent => 50,
                   }
                 },
                 :host => {
@@ -233,7 +234,7 @@ RSpec.describe "Full Stack" do
             .with(:body => %Q({"id":"8","jsonrpc":"2.0","method":"Client.SetVolume","params":{"id":"foo-bar-baz-id","volume":{"muted":#{!current_mute_status}}}}))
             .to_return(:body => "{}")
 
-          expect(ShellUtils).to receive(:exec).with(%Q(/bin/bash -c "PULSE_SERVER=tcp:192.168.0.1337:4317 ffplay -autoexit -nodisp assets/jambox_#{current_mute_status ? "on" : "off"}.mp3"))
+          expect(ShellUtils).to receive(:exec).with(%Q(/bin/bash -c "PULSE_SERVER=tcp:192.168.0.1337:4317 ffplay -volume 100 -autoexit -nodisp assets/jambox_#{current_mute_status ? "on" : "off"}.mp3 2> /dev/null"))
           post "/snapcast/foo-bar-baz-id/toggle_mute"
         end
       end
@@ -265,7 +266,7 @@ RSpec.describe "Full Stack" do
         .with(:body => %Q({"id":"8","jsonrpc":"2.0","method":"Client.SetVolume","params":{"id":"foo-bar-baz-id","volume":{"muted":false, "percent":75}}}))
         .to_return(:body => "{}")
 
-      expect(ShellUtils).to receive(:exec).with(%Q(/bin/bash -c "PULSE_SERVER=tcp:192.168.0.1337:4317 ffplay -autoexit -nodisp assets/jambox_volume_change.mp3"))
+      expect(ShellUtils).to receive(:exec).with(%Q(/bin/bash -c "PULSE_SERVER=tcp:192.168.0.1337:4317 ffplay -volume 75 -autoexit -nodisp assets/jambox_volume_change.mp3 2> /dev/null"))
       post "/snapcast/foo-bar-baz-id/volume_up"
     end
 
@@ -288,12 +289,6 @@ RSpec.describe "Full Stack" do
         .with(:body => %Q({"id":8,"jsonrpc":"2.0","method":"Client.GetStatus","params":{"id":"foo-bar-baz-id"}}))
         .to_return(:body => snapcast_get_status_response.to_json)
 
-
-      stub_request(:post, "192.168.0.23:1780/jsonrpc")
-        .with(:body => %Q({"id":"8","jsonrpc":"2.0","method":"Client.SetVolume","params":{"id":"foo-bar-baz-id","volume":{"muted":false, "percent":100}}}))
-        .to_return(:body => "{}")
-
-      expect(ShellUtils).to receive(:exec).with(%Q(/bin/bash -c "PULSE_SERVER=tcp:192.168.0.1337:4317 ffplay -autoexit -nodisp assets/jambox_volume_change.mp3"))
       post "/snapcast/foo-bar-baz-id/volume_up"
     end
   end
@@ -323,6 +318,7 @@ RSpec.describe "Full Stack" do
         .with(:body => %Q({"id":"8","jsonrpc":"2.0","method":"Client.SetVolume","params":{"id":"foo-bar-baz-id","volume":{"muted":false, "percent":65}}}))
         .to_return(:body => "{}")
 
+      expect(ShellUtils).to receive(:exec).with(%Q(/bin/bash -c "PULSE_SERVER=tcp:192.168.0.1337:4317 ffplay -volume 65 -autoexit -nodisp assets/jambox_volume_change.mp3 2> /dev/null"))
       post "/snapcast/foo-bar-baz-id/volume_down"
     end
 

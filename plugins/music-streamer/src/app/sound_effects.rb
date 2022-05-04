@@ -15,9 +15,9 @@ module SoundEffects
 
   private_constant :SOUND_EFFECT_ASSETS
 
-  def self.play_sound_effect(effect_name, target_snapcast_server)
+  def self.play_sound_effect(effect_name, target_snapcast_server, volume_percent)
     _thread do
-      ShellUtils.exec(%(/bin/bash -c "PULSE_SERVER=#{target_snapcast_server} ffplay -autoexit -nodisp #{_get_path(effect_name)}"))
+      ShellUtils.exec(%(/bin/bash -c "PULSE_SERVER=#{target_snapcast_server} ffplay -volume #{volume_percent} -autoexit -nodisp #{_get_path(effect_name)} 2> /dev/null"))
     end
   end
 

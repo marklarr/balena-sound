@@ -62,7 +62,8 @@ class MusicStreamerApplication < Sinatra::Base
   post '/stream/next_track' do
     SoundEffects.play_sound_effect(
       SoundEffects::EffectName::SKIP,
-      "tcp:localhost:4317"
+      "tcp:localhost:4317",
+      100
     )
     event_machine_server.send_data({:message_type => "next_track"}.to_json)
     201
@@ -88,7 +89,8 @@ class MusicStreamerApplication < Sinatra::Base
 
     SoundEffects.play_sound_effect(
       new_mute_status ? SoundEffects::EffectName::PAUSE : SoundEffects::EffectName::PLAY,
-      "tcp:#{ip}:4317"
+      "tcp:#{ip}:4317",
+      100
     )
     SnapcastJsonRpcGateway.set_volume_muted(params[:client_id], new_mute_status)
     201
@@ -99,17 +101,19 @@ class MusicStreamerApplication < Sinatra::Base
 
     current_volume = response_body_parsed["result"]["client"]["config"]["volume"]["percent"]
     new_volume = [current_volume + 5, MAX_VOLUME].min
-    ip = response_body_parsed["result"]["client"]["host"]["ip"]
+    if new_volume != current_volume
+      ip = response_body_parsed["result"]["client"]["host"]["ip"]
 
-    SnapcastJsonRpcGateway.set_volume_percent(params[:client_id], new_volume)
 
-    # Specifically do this after SnapcastJsonRpcGateway call
-    # so that sound effect has new volume level
-    SoundEffects.play_sound_effect(
-      SoundEffects::EffectName::VOLUME_CHANGE,
-      "tcp:#{ip}:4317"
-    )
+      SoundEffects.play_sound_effect(
+        SoundEffects::EffectName::VOLUME_CHANGE,
+        "tcp:#{ip}:4317",
+        new_volume
+      )
 
+      SnapcastJsonRpcGateway.set_volume_percent(params[:client_id], new_volume)
+
+    end
     201
   end
 
@@ -118,14 +122,17 @@ class MusicStreamerApplication < Sinatra::Base
 
     current_volume = response_body_parsed["result"]["client"]["config"]["volume"]["percent"]
     new_volume = [current_volume - 5, MIN_VOLUME].max
-    ip = response_body_parsed["result"]["client"]["host"]["ip"]
+    if new_volume != current_volume
+      ip = response_body_parsed["result"]["client"]["host"]["ip"]
 
-    SoundEffects.play_sound_effect(
-      SoundEffects::EffectName::VOLUME_CHANGE,
-      "tcp:#{ip}:4317"
-    )
+      SoundEffects.play_sound_effect(
+        SoundEffects::EffectName::VOLUME_CHANGE,
+        "tcp:#{ip}:4317",
+        new_volume
+      )
 
-    SnapcastJsonRpcGateway.set_volume_percent(params[:client_id], new_volume)
+      SnapcastJsonRpcGateway.set_volume_percent(params[:client_id], new_volume)
+    end
     201
   end
 end
