@@ -63,7 +63,7 @@ class MusicStreamerApplication < Sinatra::Base
     SoundEffects.play_sound_effect(
       SoundEffects::EffectName::SKIP,
       "tcp:localhost:4317",
-      100
+      50
     )
     event_machine_server.send_data({:message_type => "next_track"}.to_json)
     201
@@ -90,7 +90,7 @@ class MusicStreamerApplication < Sinatra::Base
     SoundEffects.play_sound_effect(
       new_mute_status ? SoundEffects::EffectName::PAUSE : SoundEffects::EffectName::PLAY,
       "tcp:#{ip}:4317",
-      100
+      50
     )
     SnapcastJsonRpcGateway.set_volume_muted(params[:client_id], new_mute_status)
     201
@@ -128,7 +128,7 @@ class MusicStreamerApplication < Sinatra::Base
       SoundEffects.play_sound_effect(
         SoundEffects::EffectName::VOLUME_CHANGE,
         "tcp:#{ip}:4317",
-        new_volume
+        50
       )
 
       SnapcastJsonRpcGateway.set_volume_percent(params[:client_id], new_volume)
