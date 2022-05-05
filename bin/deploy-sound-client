@@ -3,7 +3,4 @@ source $(dirname "$0")/utils.sh
 
 assertCurrentDirectory
 
-balena deploy sound-client
-
-echo "ERROR: Need to figure this one out still"
-exit 1
+balena push sound-client
