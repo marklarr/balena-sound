@@ -31,11 +31,16 @@ class AudioStreamSource
 
     def get_debug_string
       [
-        :stdout => @stdout.inspect,
-        :stdin => @stdin.inspect,
-        :stderr => @stderr.inspect,
-        :wait_thr => @wait_thr.inspect,
+        :stdout => _debug_io(@stdout),
       ].inspect
+    end
+
+    def _debug_io(io)
+      begin
+        io_contents = io_clone.read_nonblock(1024 * 10)
+      rescue IO::EAGAINWaitReadable => e
+        ""
+      end
     end
   end
 end
