@@ -68,6 +68,7 @@ class MusicStreamerWorker < EM::Connection
   def _do_pianobar_eventcmd(message)
     pianobar_event = PianobarEvent.from_parsed_json(JSON.parse(message["event_payload"]))
     _update_status!(pianobar_event.get_status)
+    @audio_stream_source.clear_io!
   end
 
   def _do_debug(message)

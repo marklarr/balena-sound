@@ -35,6 +35,14 @@ class AudioStreamSource
       ].inspect
     end
 
+    def clear_io!
+      # Pianobar will stop playing if stdout gets full
+      str = _debug_io(@stdout)
+      while str.length > 0
+        str = _debug_io(@stdout)
+      end
+    end
+
     def _debug_io(io)
       begin
         io.read_nonblock(1024 * 10)

@@ -157,6 +157,14 @@ RSpec.describe "Full Stack" do
   describe "/stream/stop" do
     context "when pandora is playing" do
       it "stops pianobar using the appropriate bash command" do
+        stdin_mock = double(:puts => nil)
+        stderr_mock = double
+        wait_thr_mock = double
+        stdout_mock = double(:read_nonblock => "Select station:")
+
+        expect(ShellUtils).to receive(:popen3)
+          .with(%Q(/bin/bash -lc 'pianobar'))
+          .and_return([stdin_mock, stdout_mock, stderr_mock, wait_thr_mock])
         post "/stream/pandora_radio"
         expect(last_response.status).to eq(201)
 
@@ -199,9 +207,12 @@ RSpec.describe "Full Stack" do
   end
 
   describe "/pianobar_eventcmd" do
-    it "updates websockets" do
+    it "updates websockets and clears io" do
+      pandora_mock = double
+      @worker_mock.instance_variable_set("@audio_stream_source", pandora_mock)
       expect(@settings_mock).to receive(:worker_status=)
         .with("TOOL - Jimmy (songstart)")
+      expect(pandora_mock).to receive(:clear_io!)
       post "pianobar_eventcmd", File.read("spec/fixtures/pianobar_eventcmd.json")
     end
   end
