@@ -37,7 +37,7 @@ class AudioStreamSource
 
     def _debug_io(io)
       begin
-        io_contents = io_clone.read_nonblock(1024 * 10)
+        io.read_nonblock(1024 * 10)
       rescue IO::EAGAINWaitReadable => e
         ""
       end
