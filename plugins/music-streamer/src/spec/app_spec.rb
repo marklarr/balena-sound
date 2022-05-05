@@ -25,9 +25,13 @@ RSpec.describe "Full Stack" do
       .with(:body => %Q({"id":1,"jsonrpc":"2.0","method":"Server.GetStatus"}))
       .to_return(:body => File.read("spec/fixtures/snapcast_server_status_response.json"))
 
-    @settings_mock = double(:sockets => [], :worker_status= => "")
+    @socket_mock = double
+    allow(@socket_mock).to receive(:send)
+
+    @settings_mock = double(:sockets => [@socket_mock], :worker_status= => "")
     @app_mock = double(:settings => @settings_mock)
     @worker_mock = MusicStreamerWorker.new("sig", @app_mock)
+    allow(@worker_mock).to receive(:_thread) { |&block| block.call }
 
     allow(EventMachine).to receive(:start_server)
     allow(EM).to receive(:next_tick) { |&block| block.call }
@@ -75,8 +79,6 @@ RSpec.describe "Full Stack" do
   describe "/stream/youtube" do
     describe "full stack" do
       it "streams the youtube channel using the appropriate bash command" do
-        allow(@worker_mock).to receive(:_thread) { |&block| block.call }
-
         pid_mock = double
         expect(ShellUtils).to receive(:spawn)
           .with(%Q(/bin/bash -c " ffplay -nodisp <(youtube-dl -f 96  'https://www.youtube.com/watch?v=5qap5aO4i9A' -o -) 2> /dev/null"))
@@ -101,9 +103,6 @@ RSpec.describe "Full Stack" do
   describe "/stream/pandora_radio" do
     describe "full stack" do
       it "streams the pandora station using the approriate string of pianobar STDIN commands" do
-
-        allow(@worker_mock).to receive(:_thread) { |&block| block.call }
-
         stdin_mock = double(:puts => nil)
         stderr_mock = double
         wait_thr_mock = double
@@ -130,8 +129,6 @@ RSpec.describe "Full Stack" do
 
   describe "/stream/next_track" do
     it "sends the 'next' command to pianobar" do
-      allow(@worker_mock).to receive(:_thread) { |&block| block.call }
-
       stdin_mock = double(:puts => nil)
       stderr_mock = double
       wait_thr_mock = double
@@ -336,6 +333,17 @@ RSpec.describe "Full Stack" do
         .to_return(:body => "{}")
 
       post "/snapcast/ba6e0fc699945fa7dc028733455dfb88/volume_down"
+    end
+  end
+
+  describe "/stream/pandora_radio/debug" do
+    it "provides debug information about the pianobar bash process" do
+      @pandora_mock = double
+      expect(@pandora_mock).to receive(:get_debug_string).and_return("debug string foo")
+      expect(@socket_mock).to receive(:send).with("debug string foo")
+      @worker_mock.instance_variable_set("@audio_stream_source", @pandora_mock)
+      post "/stream/pandora_radio/debug"
+      expect(last_response.status).to eq(200)
     end
   end
 end

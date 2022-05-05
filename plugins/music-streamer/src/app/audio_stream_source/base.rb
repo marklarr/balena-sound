@@ -19,5 +19,9 @@ class AudioStreamSource
     def name
       raise NotImplementedError
     end
+
+    def get_debug_string
+      raise NotImplementedError
+    end
   end
 end

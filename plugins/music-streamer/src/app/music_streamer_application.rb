@@ -61,6 +61,11 @@ class MusicStreamerApplication < Sinatra::Base
     201
   end
 
+  post '/stream/pandora_radio/debug' do
+    event_machine_server.send_data({:message_type => "debug", :audio_stream_source_type => 'pandora'}.to_json)
+    200
+  end
+
   post '/stream/next_track' do
     SoundEffects.play_sound_effect(
       SoundEffects::EffectName::SKIP,
