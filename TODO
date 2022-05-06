@@ -47,3 +47,6 @@
     * Homeassistant plugin that sends API requests to sinatra app
       * This docker container is not streaming an audio. Just simply sending API requests to the sinatra app in the other container.
       * https://developers.home-assistant.io/docs/frontend/custom-ui/custom-card/
+
+
+* If multi-room sound isn't working (idle), but snapclients are connected in snapweb, then restart the audio and multiroom-audio blocks on the sound-leader
