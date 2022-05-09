@@ -21,7 +21,7 @@ RSpec.describe "Full Stack" do
     allow(ShellUtils).to receive(:wait)
     allow(SoundEffects).to receive(:_thread) { |&block| block.call }
 
-    stub_request(:post, "192.168.0.23:1780/jsonrpc")
+    stub_request(:post, "192.168.5.227:1780/jsonrpc")
       .with(:body => %Q({"id":1,"jsonrpc":"2.0","method":"Server.GetStatus"}))
       .to_return(:body => File.read("spec/fixtures/snapcast_server_status_response.json"))
 
@@ -234,12 +234,12 @@ RSpec.describe "Full Stack" do
               }
             }
           }
-          stub_request(:post, "192.168.0.23:1780/jsonrpc")
+          stub_request(:post, "192.168.5.227:1780/jsonrpc")
             .with(:body => %Q({"id":8,"jsonrpc":"2.0","method":"Client.GetStatus","params":{"id":"ba6e0fc699945fa7dc028733455dfb88"}}))
             .to_return(:body => snapcast_get_status_response.to_json)
 
 
-          stub_request(:post, "192.168.0.23:1780/jsonrpc")
+          stub_request(:post, "192.168.5.227:1780/jsonrpc")
             .with(:body => %Q({"id":"8","jsonrpc":"2.0","method":"Client.SetVolume","params":{"id":"ba6e0fc699945fa7dc028733455dfb88","volume":{"muted":#{!current_mute_status}}}}))
             .to_return(:body => "{}")
 
@@ -263,12 +263,12 @@ RSpec.describe "Full Stack" do
           }
         }
       }
-      stub_request(:post, "192.168.0.23:1780/jsonrpc")
+      stub_request(:post, "192.168.5.227:1780/jsonrpc")
         .with(:body => %Q({"id":8,"jsonrpc":"2.0","method":"Client.GetStatus","params":{"id":"ba6e0fc699945fa7dc028733455dfb88"}}))
         .to_return(:body => snapcast_get_status_response.to_json)
 
 
-      stub_request(:post, "192.168.0.23:1780/jsonrpc")
+      stub_request(:post, "192.168.5.227:1780/jsonrpc")
         .with(:body => %Q({"id":"8","jsonrpc":"2.0","method":"Client.SetVolume","params":{"id":"ba6e0fc699945fa7dc028733455dfb88","volume":{"muted":false, "percent":75}}}))
         .to_return(:body => "{}")
 
@@ -288,7 +288,7 @@ RSpec.describe "Full Stack" do
           }
         }
       }
-      stub_request(:post, "192.168.0.23:1780/jsonrpc")
+      stub_request(:post, "192.168.5.227:1780/jsonrpc")
         .with(:body => %Q({"id":8,"jsonrpc":"2.0","method":"Client.GetStatus","params":{"id":"ba6e0fc699945fa7dc028733455dfb88"}}))
         .to_return(:body => snapcast_get_status_response.to_json)
 
@@ -309,12 +309,12 @@ RSpec.describe "Full Stack" do
           }
         }
       }
-      stub_request(:post, "192.168.0.23:1780/jsonrpc")
+      stub_request(:post, "192.168.5.227:1780/jsonrpc")
         .with(:body => %Q({"id":8,"jsonrpc":"2.0","method":"Client.GetStatus","params":{"id":"ba6e0fc699945fa7dc028733455dfb88"}}))
         .to_return(:body => snapcast_get_status_response.to_json)
 
 
-      stub_request(:post, "192.168.0.23:1780/jsonrpc")
+      stub_request(:post, "192.168.5.227:1780/jsonrpc")
         .with(:body => %Q({"id":"8","jsonrpc":"2.0","method":"Client.SetVolume","params":{"id":"ba6e0fc699945fa7dc028733455dfb88","volume":{"muted":false, "percent":65}}}))
         .to_return(:body => "{}")
 
@@ -334,12 +334,12 @@ RSpec.describe "Full Stack" do
           }
         }
       }
-      stub_request(:post, "192.168.0.23:1780/jsonrpc")
+      stub_request(:post, "192.168.5.227:1780/jsonrpc")
         .with(:body => %Q({"id":8,"jsonrpc":"2.0","method":"Client.GetStatus","params":{"id":"ba6e0fc699945fa7dc028733455dfb88"}}))
         .to_return(:body => snapcast_get_status_response.to_json)
 
 
-      stub_request(:post, "192.168.0.23:1780/jsonrpc")
+      stub_request(:post, "192.168.5.227:1780/jsonrpc")
         .with(:body => %Q({"id":"8","jsonrpc":"2.0","method":"Client.SetVolume","params":{"id":"ba6e0fc699945fa7dc028733455dfb88","volume":{"muted":false, "percent":0}}}))
         .to_return(:body => "{}")
 
