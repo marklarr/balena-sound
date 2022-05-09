@@ -22,4 +22,9 @@ module SnapcastJsonRpcGateway
     body = %Q({"id":"8","jsonrpc":"2.0","method":"Client.SetVolume","params":{"id":"#{client_id}","volume":{"muted":#{muted}}}})
     http_post(body)
   end
+
+  def self.get_server_status
+    body = %Q({"id":1,"jsonrpc":"2.0","method":"Server.GetStatus"})
+    http_post(body)
+  end
 end
