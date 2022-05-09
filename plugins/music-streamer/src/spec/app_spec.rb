@@ -127,7 +127,7 @@ RSpec.describe "Full Stack" do
     end
   end
 
-  describe "/stream/next_track" do
+  describe "/stream/next_track/:client_id" do
     it "sends the 'next' command to pianobar" do
       stdin_mock = double(:puts => nil)
       stderr_mock = double
@@ -148,8 +148,8 @@ RSpec.describe "Full Stack" do
         .ordered
       expect(stdin_mock).to receive(:puts).with("n")
 
-      expect(ShellUtils).to receive(:exec).with(%Q(/bin/bash -c "PULSE_SERVER=tcp:localhost:4317 ffplay -volume 50 -autoexit -nodisp assets/jambox_on.mp3 2> /dev/null"))
-      post "/stream/next_track"
+      expect(ShellUtils).to receive(:exec).with(%Q(/bin/bash -c "PULSE_SERVER=tcp:192.168.0.26:4317 ffplay -volume 50 -autoexit -nodisp assets/jambox_on.mp3 2> /dev/null"))
+      post "/stream/next_track/ba6e0fc699945fa7dc028733455dfb88"
       expect(last_response.status).to eq(201)
     end
   end
