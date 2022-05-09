@@ -127,6 +127,33 @@ RSpec.describe "Full Stack" do
     end
   end
 
+  describe "/stream/next_track" do
+    it "sends the 'next' command to pianobar" do
+      stdin_mock = double(:puts => nil)
+      stderr_mock = double
+      wait_thr_mock = double
+      stdout_mock = double(:read_nonblock => "Select station:")
+
+      expect(ShellUtils).to receive(:popen3)
+        .with(%Q(/bin/bash -lc 'pianobar'))
+        .and_return([stdin_mock, stdout_mock, stderr_mock, wait_thr_mock])
+
+      post "/stream/pandora_radio"
+
+      expect(@settings_mock).to receive(:worker_status=)
+        .with("Skipping...")
+        .ordered
+      expect(@settings_mock).to receive(:worker_status=)
+        .with("Skipped")
+        .ordered
+      expect(stdin_mock).to receive(:puts).with("n")
+
+      expect(ShellUtils).not_to receive(:exec).with(/ffplay/)
+      post "/stream/next_track"
+      expect(last_response.status).to eq(201)
+    end
+  end
+
   describe "/stream/next_track/:client_id" do
     it "sends the 'next' command to pianobar" do
       stdin_mock = double(:puts => nil)

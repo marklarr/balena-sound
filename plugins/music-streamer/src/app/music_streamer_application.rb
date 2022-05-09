@@ -66,14 +66,23 @@ class MusicStreamerApplication < Sinatra::Base
     200
   end
 
+  post '/stream/next_track' do
+    next_track!
+    201
+  end
+
   post '/stream/next_track/:client_id' do
     SoundEffects.play_sound_effect(
       SoundEffects::EffectName::SKIP,
       "tcp:#{_cached_snapcast_server_ip(params[:client_id])}:4317",
       50
     )
-    event_machine_server.send_data({:message_type => "next_track"}.to_json)
+    next_track!
     201
+  end
+
+  def next_track!
+    event_machine_server.send_data({:message_type => "next_track"}.to_json)
   end
 
   post '/stream/stop' do
