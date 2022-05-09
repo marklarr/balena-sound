@@ -1,0 +1,28 @@
+#!/bin/bash
+source $(dirname "$0")/utils.sh
+
+assertCurrentDirectory
+
+device_area=$1 && shift
+
+case $device_area in
+
+  office)
+		device_uuid="75b73637db7aad2e34231cf3f0bbb4a6"
+    ;;
+
+  kitchen)
+		device_uuid="ba6e0fc699945fa7dc028733455dfb88"
+    ;;
+
+  living_room)
+    device_uuid="dac6cee9503ac49b82055d6714d62c9b"
+    ;;
+
+  *)
+    echo -n "unknown device area: $device_area"
+		exit 1
+    ;;
+esac
+
+balena ssh $device_uuid $@
