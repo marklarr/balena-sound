@@ -1,6 +1,6 @@
 module SnapcastJsonRpcGateway
   def self.http_post(body)
-    http = Net::HTTP.new("192.168.0.23", 1780)
+    http = Net::HTTP.new("192.168.5.227", 1780)
 
     request = Net::HTTP::Post.new("/jsonrpc")
     request.body = body
