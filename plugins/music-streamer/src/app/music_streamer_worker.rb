@@ -19,7 +19,7 @@ class MusicStreamerWorker < EM::Connection
   def _init_audio_stream_source_from_msg(message)
     case message["audio_stream_source_type"]
     when 'pandora'
-      AudioStreamSource::Pandora.new(message)
+      AudioStreamSource::Pandora.new(message["station_number"])
     when 'youtube'
       AudioStreamSource::Youtube.new(message)
     else

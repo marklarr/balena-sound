@@ -51,3 +51,5 @@
 
 * If multi-room sound isn't working (idle), but snapclients are connected in snapweb, then restart the audio and multiroom-audio blocks on the sound-leader
 * Add vim all dockerfiles (for ssh'ing and debugging things etc)
+
+* Put /config/www/marklarr/numpad.js from home-automation container into git

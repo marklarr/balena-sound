@@ -4,7 +4,7 @@ require_relative "../app"
 require "rspec"
 require "rack/test"
 # Only uncomment when uncommenting require "irb" line in Gemfile
-# require "pry-byebug"
+require "pry-byebug"
 require "webmock/rspec"
 
 RSpec.describe "Full Stack" do
@@ -19,6 +19,15 @@ RSpec.describe "Full Stack" do
     allow(ShellUtils).to receive(:exec)
     allow(ShellUtils).to receive(:popen3)
     allow(ShellUtils).to receive(:wait)
+    @pianobar_stdin_mock = double(:puts => nil)
+    @pianobar_stderr_mock = double
+    @pianobar_wait_thr_mock = double
+    @pianobar_stdout_mock = double(:read_nonblock => File.read("spec/fixtures/pianobar_launch_stdout.txt"))
+
+    allow(ShellUtils).to receive(:popen3)
+      .with(%Q(/bin/bash -lc 'pianobar'))
+      .and_return([@pianobar_stdin_mock, @pianobar_stdout_mock, @pianobar_stderr_mock, @pianobar_wait_thr_mock])
+
     allow(SoundEffects).to receive(:_thread) { |&block| block.call }
 
     stub_request(:post, "192.168.5.227:1780/jsonrpc")
@@ -100,19 +109,10 @@ RSpec.describe "Full Stack" do
     end
   end
 
-  describe "/stream/pandora_radio" do
+  describe "/stream/pandora_radio/:station" do
     describe "full stack" do
       it "streams the pandora station using the approriate string of pianobar STDIN commands" do
-        stdin_mock = double(:puts => nil)
-        stderr_mock = double
-        wait_thr_mock = double
-        stdout_mock = double(:read_nonblock => "Select station:")
-
-        expect(ShellUtils).to receive(:popen3)
-          .with(%Q(/bin/bash -lc 'pianobar'))
-          .and_return([stdin_mock, stdout_mock, stderr_mock, wait_thr_mock])
-
-        expect(stdin_mock).to receive(:puts).with(26)
+        expect(@pianobar_stdin_mock).to receive(:puts).with("3")
 
         expect(@settings_mock).to receive(:worker_status=)
           .with("Starting...")
@@ -121,7 +121,7 @@ RSpec.describe "Full Stack" do
           .with("Pandora")
           .ordered
 
-        post "/stream/pandora_radio"
+        post "/stream/pandora_radio/3"
         expect(last_response.status).to eq(201)
       end
     end
@@ -129,16 +129,7 @@ RSpec.describe "Full Stack" do
 
   describe "/stream/next_track" do
     it "sends the 'next' command to pianobar" do
-      stdin_mock = double(:puts => nil)
-      stderr_mock = double
-      wait_thr_mock = double
-      stdout_mock = double(:read_nonblock => "Select station:")
-
-      expect(ShellUtils).to receive(:popen3)
-        .with(%Q(/bin/bash -lc 'pianobar'))
-        .and_return([stdin_mock, stdout_mock, stderr_mock, wait_thr_mock])
-
-      post "/stream/pandora_radio"
+      post "/stream/pandora_radio/1"
 
       expect(@settings_mock).to receive(:worker_status=)
         .with("Skipping...")
@@ -146,7 +137,7 @@ RSpec.describe "Full Stack" do
       expect(@settings_mock).to receive(:worker_status=)
         .with("Skipped")
         .ordered
-      expect(stdin_mock).to receive(:puts).with("n")
+      expect(@pianobar_stdin_mock).to receive(:puts).with("n")
 
       expect(ShellUtils).not_to receive(:exec).with(/ffplay/)
       post "/stream/next_track"
@@ -156,16 +147,7 @@ RSpec.describe "Full Stack" do
 
   describe "/stream/next_track/:client_id" do
     it "sends the 'next' command to pianobar" do
-      stdin_mock = double(:puts => nil)
-      stderr_mock = double
-      wait_thr_mock = double
-      stdout_mock = double(:read_nonblock => "Select station:")
-
-      expect(ShellUtils).to receive(:popen3)
-        .with(%Q(/bin/bash -lc 'pianobar'))
-        .and_return([stdin_mock, stdout_mock, stderr_mock, wait_thr_mock])
-
-      post "/stream/pandora_radio"
+      post "/stream/pandora_radio/1"
 
       expect(@settings_mock).to receive(:worker_status=)
         .with("Skipping...")
@@ -173,7 +155,7 @@ RSpec.describe "Full Stack" do
       expect(@settings_mock).to receive(:worker_status=)
         .with("Skipped")
         .ordered
-      expect(stdin_mock).to receive(:puts).with("n")
+      expect(@pianobar_stdin_mock).to receive(:puts).with("n")
 
       expect(ShellUtils).to receive(:exec).with(%Q(/bin/bash -c "PULSE_SERVER=tcp:192.168.0.26:4317 ffplay -volume 50 -autoexit -nodisp assets/jambox_on.mp3 2> /dev/null"))
       post "/stream/next_track/ba6e0fc699945fa7dc028733455dfb88"
@@ -184,15 +166,7 @@ RSpec.describe "Full Stack" do
   describe "/stream/stop" do
     context "when pandora is playing" do
       it "stops pianobar using the appropriate bash command" do
-        stdin_mock = double(:puts => nil)
-        stderr_mock = double
-        wait_thr_mock = double
-        stdout_mock = double(:read_nonblock => "Select station:")
-
-        expect(ShellUtils).to receive(:popen3)
-          .with(%Q(/bin/bash -lc 'pianobar'))
-          .and_return([stdin_mock, stdout_mock, stderr_mock, wait_thr_mock])
-        post "/stream/pandora_radio"
+        post "/stream/pandora_radio/1"
         expect(last_response.status).to eq(201)
 
         expect(ShellUtils).to receive(:exec)
@@ -374,14 +348,12 @@ RSpec.describe "Full Stack" do
     end
   end
 
-  describe "/stream/pandora_radio/debug" do
-    it "provides debug information about the pianobar bash process" do
-      @pandora_mock = double
-      expect(@pandora_mock).to receive(:get_debug_string).and_return("debug string foo")
-      expect(@socket_mock).to receive(:send).with("debug string foo")
-      @worker_mock.instance_variable_set("@audio_stream_source", @pandora_mock)
-      post "/stream/pandora_radio/debug"
+  describe "/stream/stations" do
+    it "lists all available stations" do
+
+      get "/stream/stations"
       expect(last_response.status).to eq(200)
+      expect(last_response.body).to eq(%Q({"pandora":{"0":"90s Alternative  Radio","1":"A Perfect Circle Radio","2":"Alternative Rock Radio","3":"Ambient Radio","4":"Blonde Redhead Radio","5":"Bush Radio","6":"Chill Out Radio","7":"Classical for Work Radio","8":"Filter Radio","9":"Gold Guns Girls Radio","10":"Liars Radio","11":"Marilyn Manson Radio","12":"Meditation Radio","13":"Modest Mouse Radio","14":"New Chill Radio","15":"Nine Inch Nails Radio","16":"No Doubt Radio","17":"Placebo Radio","18":"QuickMix","19":"Radiohead Radio","20":"RJD2 Radio","21":"Silversun Pickups Radio","22":"Smashing Pumpkins Radio","23":"Soundgarden Radio","24":"The Mars Volta Radio","25":"Third Eye Blind Radio","27":"TOOL Radio","28":"Ween Radio"}}))
     end
   end
 end

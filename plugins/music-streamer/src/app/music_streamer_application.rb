@@ -22,9 +22,11 @@ class MusicStreamerApplication < Sinatra::Base
   end
 
   SNAPCAST_SERVER_IP_BY_CLIENT_NAME_CACHE = {}
+  STATION_LIST_CACHE = {}
 
   def initialize(*args)
     _cache_snapcast_server_ips!
+    _cache_pandora_station_list!
     EventMachine::start_server '127.0.0.1', '4000', MusicStreamerWorker, self
     super
   end
@@ -56,14 +58,9 @@ class MusicStreamerApplication < Sinatra::Base
     201
   end
 
-  post '/stream/pandora_radio' do
-    event_machine_server.send_data({:message_type => "start", :audio_stream_source_type => 'pandora'}.to_json)
+  post '/stream/pandora_radio/:station_number' do
+    event_machine_server.send_data({:message_type => "start", :audio_stream_source_type => 'pandora', :station_number => params[:station_number]}.to_json)
     201
-  end
-
-  post '/stream/pandora_radio/debug' do
-    event_machine_server.send_data({:message_type => "debug", :audio_stream_source_type => 'pandora'}.to_json)
-    200
   end
 
   post '/stream/next_track' do
@@ -79,6 +76,11 @@ class MusicStreamerApplication < Sinatra::Base
     )
     next_track!
     201
+  end
+
+  get '/stream/stations' do
+    content_type :json
+    STATION_LIST_CACHE.to_json
   end
 
   def next_track!
@@ -161,6 +163,11 @@ class MusicStreamerApplication < Sinatra::Base
         SNAPCAST_SERVER_IP_BY_CLIENT_NAME_CACHE[client["id"]] = client["host"]["ip"]
       end
     end
+  end
+
+  def _cache_pandora_station_list!
+    pandora = AudioStreamSource::Pandora.new(nil)
+    STATION_LIST_CACHE["pandora"] = pandora.get_station_list
   end
 end
 

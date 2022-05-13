@@ -1,0 +1,34 @@
+Welcome to pianobar (2022.04.01)! Press ? for a list of commands.
+\e[2K(i) Login... Ok.
+\e[2K(i) Get stations... Ok.
+\e[2K/!\\ Error: Autostart station not found.
+\e[2K\t 0) q   90s Alternative  Radio
+\e[2K\t 1) q   A Perfect Circle Radio
+\e[2K\t 2) q   Alternative Rock Radio
+\e[2K\t 3) q   Ambient Radio
+\e[2K\t 4) q   Blonde Redhead Radio
+\e[2K\t 5) q   Bush Radio
+\e[2K\t 6) q   Chill Out Radio
+\e[2K\t 7) q   Classical for Work Radio
+\e[2K\t 8) q   Filter Radio
+\e[2K\t 9) q   Gold Guns Girls Radio
+\e[2K\t10) q   Liars Radio
+\e[2K\t11) q   Marilyn Manson Radio
+\e[2K\t12) q   Meditation Radio
+\e[2K\t13) q   Modest Mouse Radio
+\e[2K\t14) q   New Chill Radio
+\e[2K\t15) q   Nine Inch Nails Radio
+\e[2K\t16) q   No Doubt Radio
+\e[2K\t17) q   Placebo Radio
+\e[2K\t18)  Q  QuickMix
+\e[2K\t19) q   Radiohead Radio
+\e[2K\t20) q   RJD2 Radio
+\e[2K\t21) q   Silversun Pickups Radio
+\e[2K\t22) q   Smashing Pumpkins Radio
+\e[2K\t23) q   Soundgarden Radio
+\e[2K\t24) q   The Mars Volta Radio
+\e[2K\t25) q   Third Eye Blind Radio
+\e[2K\t26)     Thumbprint Radio
+\e[2K\t27) q   TOOL Radio
+\e[2K\t28) q   Ween Radio
+\e[2K[?] Select station: 

@@ -1,9 +1,5 @@
 class AudioStreamSource
   class Base
-    def initialize(message)
-
-    end
-
     def start!
       raise NotImplementedError
     end
