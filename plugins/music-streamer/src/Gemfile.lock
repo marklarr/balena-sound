@@ -15,9 +15,6 @@ GEM
     eventmachine (1.2.7)
     ffi (1.15.5)
     hashdiff (1.0.1)
-    io-console (0.5.11)
-    irb (1.4.1)
-      reline (>= 0.3.0)
     method_source (1.0.0)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
@@ -37,8 +34,6 @@ GEM
       rack (>= 1.0, < 3)
     rdoc (6.4.0)
       psych (>= 4.0.0)
-    reline (0.3.1)
-      io-console (~> 0.5)
     require_all (3.0.0)
     rexml (3.2.5)
     rspec (3.11.0)
@@ -83,7 +78,6 @@ PLATFORMS
 
 DEPENDENCIES
   eventmachine
-  irb
   pry-byebug
   rack-test
   rdoc

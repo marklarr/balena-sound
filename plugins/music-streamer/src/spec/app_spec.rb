@@ -4,7 +4,7 @@ require_relative "../app"
 require "rspec"
 require "rack/test"
 # Only uncomment when uncommenting require "irb" line in Gemfile
-require "pry-byebug"
+# require "pry-byebug"
 require "webmock/rspec"
 
 RSpec.describe "Full Stack" do
