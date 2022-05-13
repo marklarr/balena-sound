@@ -1,6 +1,7 @@
 require 'rack'
 require 'sinatra/base'
 require 'sinatra-websocket'
+require 'sinatra/cross_origin'
 require 'eventmachine'
 require 'json'
 require 'sys/proctable'

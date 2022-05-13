@@ -33,6 +33,7 @@ class AudioStreamSource
     end
 
     def clear_io!
+      return unless @stdout
       # Pianobar will stop playing if stdout gets full
       str = _debug_io(@stdout)
       while str.length > 0

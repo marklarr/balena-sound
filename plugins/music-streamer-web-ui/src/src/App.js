@@ -1,4 +1,5 @@
 import './App.css';
+import React from 'react';
 
 const styles = {
   button: {
@@ -58,19 +59,31 @@ function stop() {
   // TODO:Handle error status code
 }
 
-function App() {
+export default class MyApp extends React.Component {
 
-  return (
-    <div className="App">
-      <header className="App-header">
-        <button style={{...styles.button,...{backgroundColor: '#007AFF'}}} onClick={playLofiHipHopRadio}> Play Lofi Hip-Hop Radio </button>
-        <button style={{...styles.button,...{backgroundColor: '#007AFF'}}} onClick={playPandoraRadio}> Play Pandora Radio </button>
-        <button style={{...styles.button,...{backgroundColor: 'Green'}}} onClick={nextTrack}> Skip </button>
-        <button style={{...styles.button,...{backgroundColor: 'red'}}}  onClick={stop}> Stop </button>
+  componentDidMount() {
+		// TODO: env var
+		fetch("http://" + MUSIC_STREAMER_API_ROOT + "/stream/stations", {
+			method:'GET',
+		}).then(response => response.json())
+			.then(data => { 
+				var stationListDiv = document.querySelector("#station-list")
+				stationListDiv.innerHTML = ""
+				for (const [number, name] of Object.entries(data.pandora)) {
+					stationListDiv.innerHTML += "<span style='display:block'>"+number+": "+name+"</span>"
+				}
+			})
+			.catch(console.error)
+		// TODO:Handle error status code
+  }
+
+  render() {
+    return (
+      <div className="App">
         <span id="socket-status" style={styles.socketStatusSpan}> </span>
-      </header>
-    </div>
-  );
-}
+        <div id="station-list"> </div>
+      </div>
+    );
+  }
 
-export default App;
+}
