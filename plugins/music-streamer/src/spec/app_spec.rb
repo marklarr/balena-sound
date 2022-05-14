@@ -106,7 +106,7 @@ RSpec.describe "Full Stack" do
       it "streams the youtube channel using the appropriate bash command" do
         pid_mock = double
         expect(ShellUtils).to receive(:spawn)
-          .with(%Q(/bin/bash -c " ffplay -nodisp <(youtube-dl -f 96  'https://www.youtube.com/watch?v=foobarbaz' -o -) 2> /dev/null"))
+          .with(%Q(/bin/bash -c " ffplay -nodisp <(youtube-dl -fbest  'https://www.youtube.com/watch?v=foobarbaz' -o -) 2> /dev/null"))
           .and_return(pid_mock)
 
         expect(ShellUtils).to receive(:wait)

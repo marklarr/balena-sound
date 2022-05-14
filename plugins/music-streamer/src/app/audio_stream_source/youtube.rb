@@ -9,7 +9,7 @@ class AudioStreamSource
     end
 
     def start!
-      @currently_playing_pid = ShellUtils.spawn("/bin/bash -c \"#{PULSE_SERVER} ffplay -nodisp <(youtube-dl -f 96  '#{@src_url}' -o -) 2> /dev/null\"")
+      @currently_playing_pid = ShellUtils.spawn("/bin/bash -c \"#{PULSE_SERVER} ffplay -nodisp <(youtube-dl -fbest  '#{@src_url}' -o -) 2> /dev/null\"")
       ShellUtils.wait(@currently_playing_pid)
     end
 
