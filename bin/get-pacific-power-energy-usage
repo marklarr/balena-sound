@@ -1,0 +1,23 @@
+curl 'https://csapps.pacificpower.net/api/energy-usage/getGreenButtonData' \
+  -H 'Accept: application/json, text/plain, */*' \
+  -H 'Accept-Language: en-US,en;q=0.9' \
+  -H 'Connection: keep-alive' \
+  -H 'Content-Type: application/json' \
+  -H 'Cookie: _ga=GA1.2.1496645479.1652489008; _gid=GA1.2.999703890.1652489008; PCState=Oregon; XSRF-TOKEN=ba929a81-497d-465a-9073-71b287d2a687; WCSSSignin=TRUE; WCSSUserType=SECURE; WCSSSID=YTRhMGFkYWEtN2E1NS00NTg2LWIxOWItN2I4NGZkNjQ2MDI2; TS0136869d=0113d214aac6c58b18aa5fac2c3894466b54da0fd6a2662a07cc419b0f7a936e9dbadb8e73d94be0147f8cbf5951bc08137714305531e37928538b5a56c9f52e60d3a16257; TS01964c10=0113d214aa3c39d9b3622b51844fbc27af607070c5a2662a07cc419b0f7a936e9dbadb8e73d94be0147f8cbf5951bc0813771430559a159667c5bbe6979e5140b83d3a77dff0068559ac7a57df2c0a56eaf55d56f98cbe74840ff086310c8c39c7cd4d082a555d741ee329fd5477d3b48e9d36e1fd; WCSSCname=Mark; WCSSII=HeJJOVxahhu0JNs46zxmKdcUf6iJUdMoqET0iB0w9e%2BLumLWlg%3D%3D; WCSSMI=307nL%2FqwBvMwUzawQNfYo8QK4XuNL7spldozi1pjEpIwy3ukdp0%3D; WCSSAL=%2Bqpmf3anYlIZCuZHM5c%2BWnFZXAs6N0Y1oD2CTwQtTTYLVdUfYpl1O0kpfQkHD2prHMhkOy7xeeP%2FHtUgjahlQgfSypL3hnt1edAtRpdnrO%2BmeuW6raGIPLT1jRYaTgyHwmCQ4fvLjkJSC1xSuUrugS6CsU2clfYwBLkuqXmRsooFu2mqex%2F9907x4pW93a%2B33pzsoiJq7i67EYJzj1R7ODeE7GdJxeFSTxTL97nysoFMwxKghFSnsQGTzGDb8DjLxHsfJXyyo6UOAAR8EeZfvoHAzbo9xG8zQpUDZ%2FDTwAhxVIql7kYPOvBeLgJDXloaeWVOkPA5gLM%2BppDwoZrOVsId%2Fhbs9oTt3kd9EMXMu4pt1cWC%2FaDL9oER%2BUbXn49YsVRLfSWi2Pd6pgLLSCKz1Z7HSxLH24xJrvOZmPQJAfmk; WCSSSAE=hUaQBSYJ4OCyC8GXMTnB2Xky4M1WsqiV5t5t%2B5%2BF1y9CnG2iYzOlZ%2Bf%2F; _gat_UA-47547204-6=1' \
+  -H 'Origin: https://csapps.pacificpower.net' \
+  -H 'Referer: https://csapps.pacificpower.net/secure/my-account/energy-usage' \
+  -H 'Sec-Fetch-Dest: empty' \
+  -H 'Sec-Fetch-Mode: cors' \
+  -H 'Sec-Fetch-Site: same-origin' \
+  -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36' \
+  -H 'X-WCSSS-Content-Signature: KyiF1Cud7Mi3SANy4z1BurQLBPp2ByaLqGXB91x8Rac1O2u7EMw+m5VwBK075xsGL61JLhRTeGWoAXvhHyVsAstcQfa9ysjILkOZBX9CZabNFwTsEoFR4VOd0PrhuIyT0X/MdG/8/DG3O2vxj9UWAzIUTGJfzG704QGUdaQXFrnq2Wc6zUagVqHgC4moNp6y6SkaHMEFpnsaLMkrRW/L5c8xkw9vZ7uwT48Q8gEc6/+nz3U2EU7B7OjMtyQ6hoLX2jtPNJMK4teanJ/C/2arAzX7+IxuKlIPDw61zLtVZba2NAr+59SRpTUzfC62sKXUw3uHjlkFD45uOa8VO0VQ1xOH02VT1lrkAHXE2fl8cS/x+OpI+TtpU3poxYVyh2pbbogB+16S2ewx6srFd0Y9EoNpJISiBAX/l+80k5UnqBnjU9GqWc9tNkqUaE5mNrNxN1hdUDbpZS5s15uYdmW/p9Y7skB0ajs2qG7oM8Gk4rzjdbG+05ppmrsvxUbatN2VkXK4Lrw6cG/vtKHPL67lj/KpnAVKi1CsQ3db+7oDwfp5+oJc64OmoAoo6gwgyyejt9f2BkYdrbq9qH/MlVtu2C9KHjysYMrHS3RbBWxO+r7TyMCaxz6cD9JvWiNrGMs80pZgBH21FB+ODD3gdX52gHZFM0OzVGOfmGi/k9BtX8I=' \
+  -H 'X-XSRF-TOKEN: ba929a81-497d-465a-9073-71b287d2a687' \
+  -H 'sec-ch-ua: " Not A;Brand";v="99", "Chromium";v="101"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "Linux"' \
+  --data-raw 'WEjOtueOUXEpTMlwOxv8vfsLZ1gg0Qxh33+Ki/rbtW2J2VFmT7XVpL1vRDFUSSYej8n6WzMGANApDLyrh7tIpnAMCe0yVCu6J/yLN1UVOFvdkyHA2xnKyltOCYgjCge0eFXDanBfKzyZ3sXUWAGLMNpnjoA2glOYfGOVBlItfAjtMpAa/zSwvbmRy3MhNFqlfDEKpewwbBUIrJ406AiX+t8kb/zDb2Syy2MzkF84I8zSREztAq3fj6HgrPKO/LNyAiFOZwkj0FAdFD5t96jVE5FB9BF38Fg4XvTvgmZV+jbmdpIMyuhuihDZWPJmNuc9fp09CShG3cwvgNwpha5riakinAaYRQySBLtp2KiOPa//Jkxn8H7WUJCkuUhviSWSHfJIROuv0/CE9tfeOBM6' \
+  --compressed | \
+   jq -r '.getGreenButtonDataResponseBody.xmlPayload' | \
+   xmllint --format -
+
+
