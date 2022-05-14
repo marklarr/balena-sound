@@ -37,11 +37,11 @@ class MusicStreamerApplication < Sinatra::Base
   end
 
   SNAPCAST_SERVER_IP_BY_CLIENT_NAME_CACHE = {}
-  STATION_LIST_CACHE = {}
 
   def initialize(*args)
     _cache_snapcast_server_ips!
     _cache_pandora_station_list!
+    _cache_youtube_station_list!
     EventMachine::start_server '127.0.0.1', '4000', MusicStreamerWorker, self
     super
   end
@@ -68,8 +68,10 @@ class MusicStreamerApplication < Sinatra::Base
     end
   end
 
-  post '/stream/youtube' do
-    event_machine_server.send_data({:message_type => "start", :audio_stream_source_type => 'youtube'}.to_json)
+  post '/stream/youtube/:station_number' do
+    station_urls = _read_env_var("YOUTUBE_STATION_URLS")&.split(",")&.map(&:strip)
+    youtube_url = station_urls[params[:station_number].to_i]
+    event_machine_server.send_data({:message_type => "start", :audio_stream_source_type => 'youtube', :youtube_url => youtube_url}.to_json)
     201
   end
 
@@ -93,9 +95,15 @@ class MusicStreamerApplication < Sinatra::Base
     201
   end
 
-  get '/stream/stations' do
+  get '/stream/pandora_radio/stations' do
     content_type :json
-    STATION_LIST_CACHE.to_json
+    @pandora_station_list_cache.to_json
+  end
+
+
+  get '/stream/youtube/stations' do
+    content_type :json
+    @youtube_station_list_cache.to_json
   end
 
   def next_track!
@@ -182,7 +190,16 @@ class MusicStreamerApplication < Sinatra::Base
 
   def _cache_pandora_station_list!
     pandora = AudioStreamSource::Pandora.new(nil)
-    STATION_LIST_CACHE["pandora"] = pandora.get_station_list
+    @pandora_station_list_cache = pandora.get_station_list
+  end
+
+  def _cache_youtube_station_list!
+    station_urls = _read_env_var("YOUTUBE_STATION_URLS")&.split(",")&.map(&:strip) || []
+    @youtube_station_list_cache = AudioStreamSource::Youtube.get_station_list(station_urls)
+  end
+
+  def _read_env_var(env_var_name)
+    ENV[env_var_name]
   end
 end
 

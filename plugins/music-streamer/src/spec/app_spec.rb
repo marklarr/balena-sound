@@ -19,6 +19,7 @@ RSpec.describe "Full Stack" do
     allow(ShellUtils).to receive(:exec)
     allow(ShellUtils).to receive(:popen3)
     allow(ShellUtils).to receive(:wait)
+    stub_youtube_stations!
     @pianobar_stdin_mock = double(:puts => nil)
     @pianobar_stderr_mock = double
     @pianobar_wait_thr_mock = double
@@ -50,6 +51,21 @@ RSpec.describe "Full Stack" do
 
   after(:each) do
     WebMock.reset!
+  end
+
+  def stub_youtube_stations!
+    allow_any_instance_of(MusicStreamerApplication).to receive(:_read_env_var)
+      .with("YOUTUBE_STATION_URLS")
+      .and_return("https://www.youtube.com/watch?v=5qap5aO4i9A, https://www.youtube.com/watch?v=foobarbaz ")
+
+
+    allow(ShellUtils).to receive(:exec)
+      .with(%Q(/bin/bash -lc 'youtube-dl \"https://www.youtube.com/watch?v=5qap5aO4i9A\" --get-title --get-thumbnail'))
+      .and_return("some youtube title\nthumbnail_url.jpg")
+
+    allow(ShellUtils).to receive(:exec)
+      .with(%Q(/bin/bash -lc 'youtube-dl \"https://www.youtube.com/watch?v=foobarbaz\" --get-title --get-thumbnail'))
+      .and_return("some youtube title 2\nthumbnail_url_2.jpg")
   end
 
   def app
@@ -85,12 +101,12 @@ RSpec.describe "Full Stack" do
     end
   end
 
-  describe "/stream/youtube" do
+  describe "/stream/youtube/:station" do
     describe "full stack" do
       it "streams the youtube channel using the appropriate bash command" do
         pid_mock = double
         expect(ShellUtils).to receive(:spawn)
-          .with(%Q(/bin/bash -c " ffplay -nodisp <(youtube-dl -f 96  'https://www.youtube.com/watch?v=5qap5aO4i9A' -o -) 2> /dev/null"))
+          .with(%Q(/bin/bash -c " ffplay -nodisp <(youtube-dl -f 96  'https://www.youtube.com/watch?v=foobarbaz' -o -) 2> /dev/null"))
           .and_return(pid_mock)
 
         expect(ShellUtils).to receive(:wait)
@@ -103,7 +119,7 @@ RSpec.describe "Full Stack" do
           .with("Youtube")
           .ordered
 
-        post "/stream/youtube"
+        post "/stream/youtube/1"
         expect(last_response.status).to eq(201)
       end
     end
@@ -148,7 +164,6 @@ RSpec.describe "Full Stack" do
   describe "/stream/next_track/:client_id" do
     it "sends the 'next' command to pianobar" do
       post "/stream/pandora_radio/1"
-
       expect(@settings_mock).to receive(:worker_status=)
         .with("Skipping...")
         .ordered
@@ -178,7 +193,7 @@ RSpec.describe "Full Stack" do
 
     context "when youtube is playing" do
       it "stops ffplay using the appropriate bash command" do
-        post "/stream/youtube"
+        post "/stream/youtube/1"
 
         expect(ShellUtils).to receive(:exec)
           .with("killall ffplay")
@@ -348,12 +363,19 @@ RSpec.describe "Full Stack" do
     end
   end
 
-  describe "/stream/stations" do
+  describe "/stream/youtube/stations" do
     it "lists all available stations" do
-
-      get "/stream/stations"
+      get "/stream/youtube/stations"
       expect(last_response.status).to eq(200)
-      expect(last_response.body).to eq(%Q({"pandora":{"0":"90s Alternative  Radio","1":"A Perfect Circle Radio","2":"Alternative Rock Radio","3":"Ambient Radio","4":"Blonde Redhead Radio","5":"Bush Radio","6":"Chill Out Radio","7":"Classical for Work Radio","8":"Filter Radio","9":"Gold Guns Girls Radio","10":"Liars Radio","11":"Marilyn Manson Radio","12":"Meditation Radio","13":"Modest Mouse Radio","14":"New Chill Radio","15":"Nine Inch Nails Radio","16":"No Doubt Radio","17":"Placebo Radio","18":"QuickMix","19":"Radiohead Radio","20":"RJD2 Radio","21":"Silversun Pickups Radio","22":"Smashing Pumpkins Radio","23":"Soundgarden Radio","24":"The Mars Volta Radio","25":"Third Eye Blind Radio","27":"TOOL Radio","28":"Ween Radio"}}))
+      expect(last_response.body).to eq(%Q({\"0\":\"some youtube title\",\"1\":\"some youtube title 2\"}))
+    end
+  end
+
+  describe "/stream/pandora_radio/stations" do
+    it "lists all available stations" do
+      get "/stream/pandora_radio/stations"
+      expect(last_response.status).to eq(200)
+      expect(last_response.body).to eq(%Q({"0":"90s Alternative  Radio","1":"A Perfect Circle Radio","2":"Alternative Rock Radio","3":"Ambient Radio","4":"Blonde Redhead Radio","5":"Bush Radio","6":"Chill Out Radio","7":"Classical for Work Radio","8":"Filter Radio","9":"Gold Guns Girls Radio","10":"Liars Radio","11":"Marilyn Manson Radio","12":"Meditation Radio","13":"Modest Mouse Radio","14":"New Chill Radio","15":"Nine Inch Nails Radio","16":"No Doubt Radio","17":"Placebo Radio","18":"QuickMix","19":"Radiohead Radio","20":"RJD2 Radio","21":"Silversun Pickups Radio","22":"Smashing Pumpkins Radio","23":"Soundgarden Radio","24":"The Mars Volta Radio","25":"Third Eye Blind Radio","27":"TOOL Radio","28":"Ween Radio"}))
     end
   end
 end

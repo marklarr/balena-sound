@@ -8,7 +8,7 @@ class AudioStreamSource
     end
 
     def start!
-      @currently_playing_pid = ShellUtils.spawn("/bin/bash -c \"#{PULSE_SERVER} ffplay -nodisp <(youtube-dl -f 96  'https://www.youtube.com/watch?v=5qap5aO4i9A' -o -) 2> /dev/null\"")
+      @currently_playing_pid = ShellUtils.spawn("/bin/bash -c \"#{PULSE_SERVER} ffplay -nodisp <(youtube-dl -f 96  '#{@src_url}' -o -) 2> /dev/null\"")
       ShellUtils.wait(@currently_playing_pid)
     end
 
@@ -36,6 +36,13 @@ class AudioStreamSource
 
     def name
       "Youtube"
+    end
+
+    def self.get_station_list(youtube_urls)
+      youtube_urls.each_with_object({}) do |youtube_url, acc_hash|
+        title, _thumbnail = ShellUtils.exec(%Q(/bin/bash -lc 'youtube-dl "#{youtube_url}" --get-title --get-thumbnail')).split("\n")
+        acc_hash[acc_hash.length] = title
+      end
     end
   end
 end
