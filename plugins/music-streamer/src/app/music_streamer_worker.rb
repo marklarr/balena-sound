@@ -21,7 +21,7 @@ class MusicStreamerWorker < EM::Connection
     when 'pandora'
       AudioStreamSource::Pandora.new(message["station_number"])
     when 'youtube'
-      AudioStreamSource::Youtube.new(message["youtube_url"])
+      AudioStreamSource::Youtube.new(message["youtube_title"], message["youtube_url"])
     else
       raise "Unkown audio_stream_source_type in message: #{message}"
     end

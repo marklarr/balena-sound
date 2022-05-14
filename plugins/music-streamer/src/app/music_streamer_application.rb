@@ -71,7 +71,8 @@ class MusicStreamerApplication < Sinatra::Base
   post '/stream/youtube/:station_number' do
     station_urls = _read_env_var("YOUTUBE_STATION_URLS")&.split(",")&.map(&:strip)
     youtube_url = station_urls[params[:station_number].to_i]
-    event_machine_server.send_data({:message_type => "start", :audio_stream_source_type => 'youtube', :youtube_url => youtube_url}.to_json)
+    youtube_title = @youtube_station_list_cache[params[:station_number].to_i]
+    event_machine_server.send_data({:message_type => "start", :audio_stream_source_type => 'youtube', :youtube_url => youtube_url, :youtube_title => youtube_title }.to_json)
     201
   end
 

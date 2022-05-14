@@ -3,7 +3,8 @@
 #
 class AudioStreamSource
   class Youtube < Base
-    def initialize(src_url)
+    def initialize(title, src_url)
+      @title = title
       @src_url = src_url
     end
 
@@ -35,7 +36,7 @@ class AudioStreamSource
     end
 
     def name
-      "Youtube"
+      "Youtube - #{@title}"
     end
 
     def self.get_station_list(youtube_urls)

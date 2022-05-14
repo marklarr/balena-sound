@@ -116,7 +116,7 @@ RSpec.describe "Full Stack" do
           .with("Starting...")
           .ordered
         expect(@settings_mock).to receive(:worker_status=)
-          .with("Youtube")
+          .with("Youtube - some youtube title 2")
           .ordered
 
         post "/stream/youtube/1"
