@@ -6,6 +6,10 @@ volumes:
   #browsercache: # gone to the big volume farm in the sky
   browsercache2:
   homeassistantcache:
+  proxy:
+  proxy_certs:
+  proxy_db:
+  proxy_duplicati:
 
 services:
 
@@ -114,3 +118,51 @@ services:
       io.balena.features.supervisor-api: 1
     environment:
       SET_HOSTNAME: balena
+
+  # https://hub.docker.com/r/jc21/nginx-proxy-manager/
+  proxy:
+    build: plugins/nginx/proxy
+    network_mode: host
+    volumes:
+      - proxy:/data
+      - proxy_certs:/etc/letsencrypt
+    depends_on:
+      - proxy_db
+
+  # https://hub.docker.com/_/mariadb/
+  proxy_db:
+    build: plugins/nginx/mariadb
+    volumes:
+      - proxy_db:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: "npm"
+      MYSQL_USER: "npm"
+      MYSQL_PASSWORD: "npm"
+    ports:
+      - '3306:3306'
+
+  # https://hub.docker.com/_/mariadb/
+  proxy_sqldump:
+    build: plugins/nginx/mariadb
+    command: "/sqldump.sh"
+    environment:
+      MYSQL_DATABASE: "npm"
+    volumes:
+      - proxy_db:/var/lib/mysql
+    depends_on:
+      - proxy_db
+
+  # https://hub.docker.com/r/linuxserver/duplicati
+  proxy_duplicati:
+    image: linuxserver/duplicati:arm64v8-latest
+    environment:
+      PUID: "0"
+      PGID: "0"
+      CLI_ARGS: --webservice-interface=any
+    ports:
+      - 8200:8200/tcp
+    volumes:
+      - proxy_duplicati:/config
+      - proxy:/source/proxy
+      - proxy_certs:/source/certs
+      - proxy_db:/source/db
