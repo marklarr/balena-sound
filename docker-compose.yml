@@ -6,6 +6,7 @@ volumes:
   #browsercache: # gone to the big volume farm in the sky
   browsercache2:
   homeassistantcache:
+  homeassistant_camera_recordings:
   proxy:
   proxy_certs:
   proxy_db:
@@ -100,6 +101,7 @@ services:
     privileged: true
     volumes:
       - 'homeassistantcache:/config'
+      - 'homeassistant_camera_recordings:/camera_recordings'
     restart: always
 
   spotify:
