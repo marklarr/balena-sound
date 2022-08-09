@@ -13,6 +13,9 @@ volumes:
   proxy_db:
   proxy_duplicati:
 
+networks:
+  zwave:
+
 services:
 
   # Core services
