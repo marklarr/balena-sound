@@ -1,0 +1,6 @@
+#!/bin/bash
+source $(dirname "$0")/utils.sh
+
+assertCurrentDirectory
+
+balena ssh 9d57043 $@
