@@ -3,4 +3,4 @@ source $(dirname "$0")/utils.sh
 
 assertCurrentDirectory
 
-balena push sound-client
+balena push larse503/balena-sound
