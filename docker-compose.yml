@@ -118,9 +118,15 @@ services:
       SET_HOSTNAME: balena
 
   mqtt-broker:
+    image: eclipse-mosquitto
     container_name: mqtt-broker
-    image: eclipse-mosquitto:latest
-    restart: always
+    volumes:
+      - /opt/mosquitto:/mosquitto
+      - /opt/mosquitto/data:/mosquitto/data
+      - /opt/mosquitto/log:/mosquitto/log
+    ports:
+      - 1883:1883
+      - 9001:9001
 
   zwavejs2mqtt:
     container_name: zwavejs2mqtt
