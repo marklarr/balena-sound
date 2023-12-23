@@ -8,6 +8,9 @@ volumes:
   homeassistantcache:
   zwave-config:
   homeassistant_camera_recordings:
+  mosquitto:
+  mosquitto-data:
+  mosquita-log:
   proxy:
   proxy_certs:
   proxy_db:
@@ -121,9 +124,9 @@ services:
     image: eclipse-mosquitto
     container_name: mqtt-broker
     volumes:
-      - /opt/mosquitto:/mosquitto
-      - /opt/mosquitto/data:/mosquitto/data
-      - /opt/mosquitto/log:/mosquitto/log
+      - mosquitto:/mosquitto
+      - mosquitto-data:/mosquitto/data
+      - mosquita-log:/mosquitto/log
     ports:
       - 1883:1883
       - 9001:9001
